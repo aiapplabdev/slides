@@ -6,6 +6,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --slide-width: 1260px;
+  --slide-height: 860px;
 }
 
 *,
@@ -47,16 +49,16 @@ body[data-theme='light'] {
 }
 
 body[data-theme='dark'] {
-  --color-bg: #03060c;
-  --gradient: radial-gradient(150% 130% at 30% 10%, #102134 0%, #060a12 55%, #020509 100%);
-  --color-surface: rgba(12, 22, 35, 0.72);
-  --color-surface-strong: rgba(8, 14, 23, 0.94);
-  --color-text: #f3f6fc;
-  --color-muted: #b6c4d9;
+  --color-bg: #03050d;
+  --gradient: radial-gradient(170% 145% at 18% 12%, #17345f 0%, #0b1630 55%, #040810 100%);
+  --color-surface: rgba(23, 36, 58, 0.92);
+  --color-surface-strong: rgba(15, 25, 42, 0.98);
+  --color-text: #f5f8ff;
+  --color-muted: #c1cde4;
   --color-accent: #4d7ccf;
   --color-accent-strong: #88aaf7;
-  --color-border: rgba(136, 164, 210, 0.16);
-  --shadow-elevated: 0 28px 52px rgba(2, 5, 9, 0.64);
+  --color-border: rgba(142, 177, 231, 0.4);
+  --shadow-elevated: 0 38px 60px rgba(4, 8, 16, 0.7);
   color-scheme: dark;
 }
 

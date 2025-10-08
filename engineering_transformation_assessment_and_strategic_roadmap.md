@@ -393,6 +393,47 @@ The success of this transformation program will be measured by the tangible impr
 
 By continuously tracking these metrics, GNTeq's leadership can ensure that the transformation program remains on track, delivers its intended ROI, and builds a sustainable capability for engineering excellence.
 
+### **Chapter 11: Metric Framework and Survey Alignment**
+
+This chapter provides a clear mapping between the industry-standard frameworks used in this report and the data gathered from the "Engineering Practices & Delivery Health Survey." This ensures transparency in how the survey results inform the broader analysis and highlights where this report introduces new concepts to provide a more comprehensive assessment.
+
+#### **11.1 DORA Framework Matrix**
+
+The DORA framework provides high-level outcome metrics for software delivery velocity and stability. While the survey does not ask for the exact values, it contains questions that serve as strong proxies for these key indicators.
+
+| Metric | Present in Survey? | Relevant Survey Question(s) | New Concept/Framework? |
+| :---- | :---- | :---- | :---- |
+| **Deployment Frequency** | Yes (Proxy) | Q16: "Delivery performance is measured with objective metrics such as deployment frequency or lead time." | Yes, the DORA framework is a new concept introduced by this report. |
+| **Lead Time for Changes** | Yes | Q6: "How long does it typically take from your first commit to production deployment?"; Q12: "Average time from code commit to deployment is typically less than one day." | Yes, the DORA framework is a new concept introduced by this report. |
+| **Change Failure Rate** | Yes (Proxy) | Q11: "The team has high confidence that released code meets reliability and performance expectations." | Yes, the DORA framework is a new concept introduced by this report. |
+| **Time to Restore Service** | Yes (Proxy) | Q12: "Automated rollback or recovery mechanisms are in place and tested." | Yes, the DORA framework is a new concept introduced by this report. |
+| **Reliability** | Yes (Proxy) | Q11: "Defects found post-release are analysed and lead to preventative improvements." | Yes, this is introduced as a formal 5th DORA metric. |
+
+#### **11.2 BlueOptima Framework Matrix**
+
+The BlueOptima framework focuses on the specific, measurable behaviors of development teams. The survey's "Quantitative Engineering Benchmarks" section maps directly to these drivers.
+
+| Metric | Present in Survey? | Relevant Survey Question(s) | New Concept/Framework? |
+| :---- | :---- | :---- | :---- |
+| **Commit Frequency** | Yes | Q4: "On average, how often do you commit code to the main branch?" | Yes, the BlueOptima framework is a new concept introduced by this report. |
+| **PR Frequency** | Yes | Q5: "How frequently do you open pull requests (PRs)?" | Yes, the BlueOptima framework is a new concept introduced by this report. |
+| **Cycle Time** | Yes | Q6: "How long does it typically take from your first commit to production deployment?" | Yes, the BlueOptima framework is a new concept introduced by this report. |
+| **Intra-PR Activity** | Yes | Q7: "How often do PR discussions or code-review comments occur in your team?" | Yes, the BlueOptima framework is a new concept introduced by this report. |
+| **Code Aberrancy** | Yes | Q9: "Does your team track code-quality metrics (defect rate, rework %, code aberrancy)?" | Yes, the BlueOptima framework is a new concept introduced by this report. |
+| **Collaboration Time** | Yes | Q8: "How much time per week is spent collaborating on code (pair programming, reviews, co-debugging)?" | Yes, the BlueOptima framework is a new concept introduced by this report. |
+
+#### **11.3 SPACE Framework Matrix**
+
+The SPACE framework provides a holistic view of developer productivity by including human factors. The qualitative, Likert-scale questions throughout the survey are used to inform the five dimensions of this framework.
+
+| Metric | Present in Survey? | Relevant Survey Question(s) | New Concept/Framework? |
+| :---- | :---- | :---- | :---- |
+| **Satisfaction & Well-being** | Yes | Q13: "Overall, I'm satisfied with my day-to-day developer experience." | Yes, the SPACE framework is a new concept introduced by this report. |
+| **Performance** | Yes | Q11: "The team has high confidence that released code meets reliability and performance expectations." | Yes, the SPACE framework is a new concept introduced by this report. |
+| **Activity** | Yes | Q13: "I spend most of my time coding rather than on manual or repetitive tasks." | Yes, the SPACE framework is a new concept introduced by this report. |
+| **Communication & Collaboration** | Yes | Q10: "Product, engineering, and design share a common understanding of priorities." | Yes, the SPACE framework is a new concept introduced by this report. |
+| **Efficiency & Flow** | Yes | Q13: "Development environments are consistent and easy to set up." | Yes, the SPACE framework is a new concept introduced by this report. |
+
 #### **Works cited**
 
 1. Ai Eng Transform Proposal \- GNTeq \- v3.pdf  

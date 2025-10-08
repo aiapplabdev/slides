@@ -35,38 +35,36 @@
 
 .progress {
   display: inline-flex;
-  gap: 0.4rem;
-  padding: 0.45rem 0.75rem;
-  border-radius: 999px;
-  background: var(--color-surface);
-  box-shadow: var(--shadow-elevated);
+  align-items: baseline;
+  gap: 0.15rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
 }
 
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--color-border);
-  transition: background 0.2s ease, transform 0.2s ease;
+.progress-text {
+  font-size: 1.05rem;
 }
 
-.dot.active {
-  background: var(--color-accent);
-  transform: scale(1.25);
+.progress-separator {
+  color: var(--color-border);
 }
 
 .viewport {
   position: relative;
-  width: min(1180px, 100%);
+  width: 100%;
   height: 100%;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .slide {
   position: relative;
-  width: clamp(320px, 92vw, 1180px);
-  min-height: clamp(480px, 82vh, 660px);
+  width: var(--slide-width);
+  max-width: calc(100vw - 3rem);
+  height: var(--slide-height);
+  max-height: calc(100vh - 3rem);
   background: var(--color-surface);
   backdrop-filter: blur(18px);
   border-radius: 28px;
@@ -74,66 +72,133 @@
   box-shadow: var(--shadow-elevated);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  position: relative;
+  overflow: hidden;
 }
 
 .slide-content {
   display: flex;
   flex-direction: column;
   gap: clamp(1.4rem, 3vw, 2.6rem);
-  max-width: 680px;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-.brand {
+.intro-brand {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: clamp(1.2rem, 3vw, 2.6rem);
+  height: 100%;
+  overflow: hidden;
 }
 
-.brand .logo {
-  width: clamp(92px, 18vw, 164px);
-  filter: drop-shadow(0 18px 32px rgba(6, 10, 18, 0.32));
+.brand-hero {
+  display: grid;
+  grid-template-columns: clamp(110px, 14%, 160px) 1fr;
+  grid-template-rows: auto auto;
+  gap: clamp(1.5rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3.5rem);
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  width: 100%;
+  max-width: 100%;
 }
 
-.brand-text h1 {
-  font-size: clamp(2.6rem, 5vw, 4.2rem);
-  letter-spacing: 0.02em;
+.hero-logo {
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  aspect-ratio: 1;
+  grid-row: 1;
+  align-self: center;
 }
 
-.brand-text p {
-  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
-  margin-top: 0.35rem;
+.hero-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 44px rgba(6, 10, 18, 0.32));
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(0.8rem, 1.6vw, 1.4rem);
+  min-width: 0;
+  grid-row: 1;
+  grid-column: 2;
+}
+
+.hero-kicker {
+  font-size: clamp(0.75rem, 1.3vw, 0.9rem);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
   color: var(--color-muted);
+  font-weight: 500;
+  opacity: 0.8;
 }
 
-.slide-header h2 {
-  font-size: clamp(2rem, 4.2vw, 3.25rem);
+.hero-copy h1 {
+  font-size: clamp(2rem, 4.2vw, 3.6rem);
+  line-height: 1.15;
+  letter-spacing: 0.005em;
+  margin: 0;
+  font-weight: 700;
 }
 
-.slide-header p {
-  font-size: clamp(1.1rem, 2vw, 1.45rem);
-  margin-top: 0.8rem;
+.hero-tagline {
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  line-height: 1.5;
+  color: var(--color-text);
+  opacity: 0.75;
+  margin: 0;
+}
+
+.hero-meta {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: clamp(0.8rem, 1.6vw, 1.4rem) clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--color-border);
+  padding-top: clamp(1rem, 2vw, 1.6rem);
+  grid-row: 2;
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.hero-meta li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4rem;
+  font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+}
+
+.hero-meta .meta-label {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+  font-weight: 600;
   color: var(--color-muted);
+  opacity: 0.8;
 }
 
-.lead {
-  font-size: clamp(1.35rem, 2.6vw, 1.8rem);
-  line-height: 1.6;
+.hero-meta .meta-value {
+  font-weight: 600;
   color: var(--color-text);
-  max-width: 560px;
 }
 
-.synopsis-body article {
-  font-size: clamp(1.05rem, 1.8vw, 1.18rem);
-  color: var(--color-text);
-  line-height: 1.7;
-  background: var(--color-surface-strong);
-  padding: clamp(1.1rem, 2vw, 1.6rem);
-  border-radius: 16px;
-  border: 1px solid var(--color-border);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-  max-width: 640px;
-}
 
 .info-button {
   position: absolute;
@@ -141,7 +206,7 @@
   right: clamp(1.6rem, 3vw, 2.8rem);
   border: none;
   background: var(--color-accent);
-  color: var(--color-text);
+  color: #ffffff;
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -195,9 +260,11 @@
 }
 
 .controls {
-  width: min(1180px, 100%);
+  width: min(var(--slide-width), 100%);
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
 }
 
 .nav {
