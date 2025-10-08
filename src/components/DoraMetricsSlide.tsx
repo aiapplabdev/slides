@@ -607,12 +607,54 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
                 </div>
                 
                 <div className="whatif-summary">
-                  <span className="stat-label">Avg Performance:</span>
-                  <span className="stat-value">
-                    {(metrics.reduce((sum, m) => 
-                      sum + calculatePerformance(m.id, whatIfMetrics[m.id], m.benchmark_value), 0
-                    ) / metrics.length).toFixed(1)}%
-                  </span>
+                  <div className="summary-row">
+                    <span className="stat-label">Overall Performance:</span>
+                    <span className="stat-value">
+                      {(() => {
+                        const avg = metrics.reduce((sum, m) => 
+                          sum + calculatePerformance(m.id, whatIfMetrics[m.id], m.benchmark_value), 0
+                        ) / metrics.length
+                        return `${avg.toFixed(1)}%`
+                      })()}
+                    </span>
+                  </div>
+                  <div className="summary-row">
+                    <span className="stat-label">Grade:</span>
+                    <span className="stat-value grade">
+                      {(() => {
+                        const avg = metrics.reduce((sum, m) => 
+                          sum + calculatePerformance(m.id, whatIfMetrics[m.id], m.benchmark_value), 0
+                        ) / metrics.length
+                        if (avg >= 90) return 'Elite'
+                        if (avg >= 75) return 'High'
+                        if (avg >= 50) return 'Medium'
+                        return 'Low'
+                      })()}
+                    </span>
+                  </div>
+                  <div className="summary-row">
+                    <span className="stat-label">On Target:</span>
+                    <span className="stat-value">
+                      {metrics.filter(m => 
+                        calculatePerformance(m.id, whatIfMetrics[m.id], m.benchmark_value) >= 75
+                      ).length} / {metrics.length}
+                    </span>
+                  </div>
+                  <div className="summary-row">
+                    <span className="stat-label">Weakest Metric:</span>
+                    <span className="stat-value weakest">
+                      {(() => {
+                        const performances = metrics.map(m => ({
+                          name: m.name,
+                          perf: calculatePerformance(m.id, whatIfMetrics[m.id], m.benchmark_value)
+                        }))
+                        const weakest = performances.reduce((min, curr) => 
+                          curr.perf < min.perf ? curr : min
+                        )
+                        return `${weakest.name.split(' ')[0]} (${weakest.perf.toFixed(0)}%)`
+                      })()}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

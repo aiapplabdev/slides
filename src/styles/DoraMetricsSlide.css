@@ -340,23 +340,17 @@
   padding: clamp(0.8rem, 1.5vw, 1.2rem);
   border: 1px solid var(--color-border);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  display: flex;
-  flex-direction: column;
-  gap: clamp(0.6rem, 1.2vw, 0.9rem);
 }
 
-.whatif-header {
+.summary-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: clamp(0.4rem, 0.8vw, 0.6rem);
-  border-bottom: 2px solid var(--color-accent);
 }
 
 .whatif-header h3 {
   font-size: clamp(0.85rem, 1.4vw, 1rem);
   font-weight: 700;
-  color: var(--color-accent);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -472,25 +466,44 @@
 }
 
 .whatif-summary {
-  padding: clamp(0.6rem, 1.2vw, 0.9rem);
+  padding: clamp(0.8rem, 1.5vw, 1.2rem);
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.02) 100%);
   border-radius: 8px;
   border: 1px solid var(--color-accent);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1vw, 0.7rem);
+}
+
+.summary-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .stat-label {
-  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  font-size: clamp(0.7rem, 1.1vw, 0.8rem);
   color: var(--color-text);
   font-weight: 600;
 }
 
 .stat-value {
-  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
   font-weight: 700;
   color: var(--color-accent);
+}
+
+.stat-value.grade {
+  padding: clamp(0.2rem, 0.4vw, 0.3rem) clamp(0.5rem, 1vw, 0.7rem);
+  background: var(--color-accent);
+  color: #ffffff;
+  border-radius: 4px;
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+}
+
+.stat-value.weakest {
+  color: #f59e0b;
+  font-size: clamp(0.8rem, 1.3vw, 0.95rem);
 }
 
 
