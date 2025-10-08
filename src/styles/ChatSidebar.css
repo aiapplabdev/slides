@@ -10,6 +10,15 @@
   display: flex;
   flex-direction: column;
   z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.chat-sidebar.closed {
+  transform: translateX(100%);
+}
+
+.chat-sidebar.open {
+  transform: translateX(0);
 }
 
 .chat-header {

@@ -18,9 +18,10 @@ type ChatSidebarProps = {
   triggerInfo: number
   theme: 'light' | 'dark'
   onToggleTheme: () => void
+  isOpen: boolean
 }
 
-export function ChatSidebar({ currentSlide, triggerInfo, theme, onToggleTheme }: ChatSidebarProps) {
+export function ChatSidebar({ currentSlide, triggerInfo, theme, onToggleTheme, isOpen }: ChatSidebarProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -207,7 +208,7 @@ export function ChatSidebar({ currentSlide, triggerInfo, theme, onToggleTheme }:
   }
 
   return (
-    <aside className="chat-sidebar">
+    <aside className={`chat-sidebar ${isOpen ? 'open' : 'closed'}`}>
       <div className="chat-header">
         <div className="chat-header-content">
           <MessageSquare size={18} />

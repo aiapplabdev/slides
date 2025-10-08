@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDrag } from '@use-gesture/react'
-import { ChevronLeft, ChevronRight, Info, MessageSquare } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MessageSquare, PanelRightOpen, PanelRightClose } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTheme } from '../hooks/useTheme'
 import { BrandSlide } from './BrandSlide'
@@ -17,6 +17,29 @@ export function SlideDeck({ slides }: SlideDeckProps) {
   const { theme, toggleTheme } = useTheme()
   const [index, setIndex] = useState(0)
   const [infoTrigger, setInfoTrigger] = useState(0)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [shouldShowSidebar, setShouldShowSidebar] = useState(true)
+
+  // Check if sidebar should be visible based on viewport width
+  useEffect(() => {
+    const checkWidth = () => {
+      // Slide width (1260px) + Sidebar min width (380px) + padding = ~1700px
+      const minWidthForSidebar = 1700
+      const shouldShow = window.innerWidth >= minWidthForSidebar
+      setShouldShowSidebar(shouldShow)
+      
+      // Auto-close sidebar if screen is too small
+      if (!shouldShow) {
+        setIsSidebarOpen(false)
+      } else {
+        setIsSidebarOpen(true)
+      }
+    }
+
+    checkWidth()
+    window.addEventListener('resize', checkWidth)
+    return () => window.removeEventListener('resize', checkWidth)
+  }, [])
 
   const slide = slides[index]
   const goNext = () => setIndex((idx) => Math.min(idx + 1, slides.length - 1))
@@ -50,7 +73,7 @@ export function SlideDeck({ slides }: SlideDeckProps) {
   })
 
   return (
-    <div className="deck">
+    <div className={`deck ${shouldShowSidebar ? 'with-sidebar' : 'without-sidebar'}`}>
       <div className="deck-content">
         <div className="viewport" {...bind()} role="presentation">
           <AnimatePresence mode="wait">
@@ -104,7 +127,23 @@ export function SlideDeck({ slides }: SlideDeckProps) {
         </div>
       </div>
 
-      <ChatSidebar currentSlide={slide} triggerInfo={infoTrigger} theme={theme} onToggleTheme={toggleTheme} />
+      {!shouldShowSidebar && (
+        <button
+          className="sidebar-toggle"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          aria-label={isSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+        >
+          {isSidebarOpen ? <PanelRightClose size={20} /> : <PanelRightOpen size={20} />}
+        </button>
+      )}
+
+      <ChatSidebar 
+        currentSlide={slide} 
+        triggerInfo={infoTrigger} 
+        theme={theme} 
+        onToggleTheme={toggleTheme}
+        isOpen={isSidebarOpen}
+      />
     </div>
   )
 }
