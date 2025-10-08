@@ -1,0 +1,401 @@
+{
+    "metadata": {
+        "organization": "GNTeq",
+        "assessment_title": "Engineering Transformation: Assessment and Strategic Roadmap",
+        "assessment_date": null,
+        "prepared_by": null,
+        "version": "1.0",
+        "notes": []
+    },
+    "benchmarks_reference": {
+        "source_documents": [
+            {
+                "title": "DORA Metrics: Complete guide to DevOps performance",
+                "citation_id": 7,
+                "url": "https://getdx.com/blog/dora-metrics/"
+            },
+            {
+                "title": "BlueOptima Global Drivers of Performance",
+                "citation_id": 1,
+                "url": null
+            },
+            {
+                "title": "SPACE Framework References",
+                "citation_id": 9,
+                "url": "https://octopus.com/devops/metrics/space-framework/"
+            }
+        ],
+        "last_updated": null
+    },
+    "assessment_overview": {
+        "executive_summary": null,
+        "key_findings": [],
+        "strategic_pillars": [
+            "Modernizing the Engineering Engine",
+            "Adopting a Product-First Operating Model",
+            "Embedding AI and Security by Design"
+        ]
+    },
+    "frameworks": {
+        "dora": {
+            "description": "System-level delivery performance metrics",
+            "metrics": [
+                {
+                    "id": "deployment_frequency",
+                    "name": "Deployment Frequency",
+                    "category": "Velocity",
+                    "definition": "How often code is deployed to production.",
+                    "measurement_method": "Count deployments per time period.",
+                    "scale": "Daily/Weekly/Monthly/Quarterly",
+                    "current_value": null,
+                    "current_period": null,
+                    "industry_benchmark": "On-demand (multiple times per day)",
+                    "performance_tier": null,
+                    "gap_analysis": null,
+                    "notes": []
+                },
+                {
+                    "id": "lead_time_for_changes",
+                    "name": "Lead Time for Changes",
+                    "category": "Velocity",
+                    "definition": "Time from first commit to production deployment.",
+                    "measurement_method": "Track commit-to-prod duration.",
+                    "scale": "Hours/Days",
+                    "current_value": null,
+                    "current_period": null,
+                    "industry_benchmark": "< 1 day",
+                    "performance_tier": null,
+                    "gap_analysis": null,
+                    "notes": []
+                },
+                {
+                    "id": "change_failure_rate",
+                    "name": "Change Failure Rate",
+                    "category": "Stability",
+                    "definition": "Percentage of deployments that degrade service.",
+                    "measurement_method": "Count failed deployments / total deployments.",
+                    "scale": "Percentage",
+                    "current_value": null,
+                    "current_period": null,
+                    "industry_benchmark": "0-15%",
+                    "performance_tier": null,
+                    "gap_analysis": null,
+                    "notes": []
+                },
+                {
+                    "id": "time_to_restore_service",
+                    "name": "Time to Restore Service",
+                    "category": "Stability",
+                    "definition": "Mean time to recover from production failure.",
+                    "measurement_method": "Track incident detection-to-resolution duration.",
+                    "scale": "Minutes/Hours",
+                    "current_value": null,
+                    "current_period": null,
+                    "industry_benchmark": "< 1 hour",
+                    "performance_tier": null,
+                    "gap_analysis": null,
+                    "notes": []
+                },
+                {
+                    "id": "reliability",
+                    "name": "Reliability / Availability",
+                    "category": "Stability",
+                    "definition": "System availability against SLAs/SLOs.",
+                    "measurement_method": "Monitor uptime/SLO metrics.",
+                    "scale": "Percentage",
+                    "current_value": null,
+                    "current_period": null,
+                    "industry_benchmark": "> 99.9% uptime",
+                    "performance_tier": null,
+                    "gap_analysis": null,
+                    "notes": []
+                }
+            ]
+        },
+        "blueoptima": {
+            "description": "Developer-level productivity drivers",
+            "metrics": [
+                {
+                    "id": "commit_frequency",
+                    "name": "Commit Frequency",
+                    "definition": "Average interval between commits per developer.",
+                    "measurement_method": "Analyze VCS commit timestamps.",
+                    "scale": "Days",
+                    "current_value": null,
+                    "industry_benchmark": "Every 1-2 days",
+                    "performance_tier": null,
+                    "gap_analysis": null
+                },
+                {
+                    "id": "pr_frequency",
+                    "name": "Pull Request Frequency",
+                    "definition": "Average interval between PR submissions.",
+                    "measurement_method": "Track PR creation timestamps.",
+                    "scale": "Days",
+                    "current_value": null,
+                    "industry_benchmark": "< 3 days",
+                    "performance_tier": null,
+                    "gap_analysis": null
+                },
+                {
+                    "id": "cycle_time",
+                    "name": "Cycle Time",
+                    "definition": "Time from first commit on branch to PR merge.",
+                    "measurement_method": "Measure branch lifetime to merge.",
+                    "scale": "Days",
+                    "current_value": null,
+                    "industry_benchmark": "< 7 days",
+                    "performance_tier": null,
+                    "gap_analysis": null
+                },
+                {
+                    "id": "intra_pr_activity",
+                    "name": "Intra-PR Activity",
+                    "definition": "Average response time to PR comments.",
+                    "measurement_method": "Analyze review/comment timestamps.",
+                    "scale": "Hours",
+                    "current_value": null,
+                    "industry_benchmark": "< 9 hours",
+                    "performance_tier": null,
+                    "gap_analysis": null
+                },
+                {
+                    "id": "code_aberrancy",
+                    "name": "Code Aberrancy",
+                    "definition": "Percentage of unmaintainable or complex code.",
+                    "measurement_method": "Static analysis / maintainability scoring.",
+                    "scale": "Percentage",
+                    "current_value": null,
+                    "industry_benchmark": "< 5%",
+                    "performance_tier": null,
+                    "gap_analysis": null
+                },
+                {
+                    "id": "collaboration_time",
+                    "name": "Collaboration Time",
+                    "definition": "Average daily synchronous overlap on repositories.",
+                    "measurement_method": "Calendar/activity overlap analysis.",
+                    "scale": "Hours per day",
+                    "current_value": null,
+                    "industry_benchmark": "> 7 hours",
+                    "performance_tier": null,
+                    "gap_analysis": null
+                }
+            ]
+        },
+        "space": {
+            "description": "Developer experience and organizational health",
+            "dimensions": [
+                {
+                    "id": "satisfaction_wellbeing",
+                    "name": "Satisfaction & Well-being",
+                    "definition": "Developer morale and day-to-day experience.",
+                    "survey_question": "Overall, I'm satisfied with my day-to-day developer experience.",
+                    "scale": "1-5 Likert",
+                    "current_score": null,
+                    "industry_target": "Strongly Agree",
+                    "supporting_signals": []
+                },
+                {
+                    "id": "performance",
+                    "name": "Performance",
+                    "definition": "Confidence in quality and impact of delivered code.",
+                    "survey_question": "The team has high confidence that released code meets reliability and performance expectations.",
+                    "scale": "1-5 Likert",
+                    "current_score": null,
+                    "industry_target": "Strongly Agree",
+                    "supporting_signals": []
+                },
+                {
+                    "id": "activity",
+                    "name": "Activity",
+                    "definition": "Balance of coding versus manual/repetitive tasks.",
+                    "survey_question": "I spend most of my time coding rather than on manual or repetitive tasks.",
+                    "scale": "1-5 Likert",
+                    "current_score": null,
+                    "industry_target": "Strongly Agree",
+                    "supporting_signals": []
+                },
+                {
+                    "id": "communication_collaboration",
+                    "name": "Communication & Collaboration",
+                    "definition": "Cross-functional alignment and knowledge sharing.",
+                    "survey_question": "Product, engineering, and design share a common understanding of priorities.",
+                    "scale": "1-5 Likert",
+                    "current_score": null,
+                    "industry_target": "Strongly Agree",
+                    "supporting_signals": []
+                },
+                {
+                    "id": "efficiency_flow",
+                    "name": "Efficiency & Flow",
+                    "definition": "Frictionless developer environments and uninterrupted focus.",
+                    "survey_question": "Development environments are consistent and easy to set up.",
+                    "scale": "1-5 Likert",
+                    "current_score": null,
+                    "industry_target": "Strongly Agree",
+                    "supporting_signals": []
+                }
+            ]
+        },
+        "ai_adoption": {
+            "description": "AI tooling maturity and governance",
+            "metrics": [
+                {
+                    "id": "ai_tool_access",
+                    "survey_question": "I have access to AI-assisted coding or documentation tools (e.g., GitHub Copilot).",
+                    "scale": "1-5 Likert",
+                    "current_score": null,
+                    "industry_benchmark": "Universal access (Strongly Agree)",
+                    "gap_analysis": null
+                },
+                {
+                    "id": "ai_tool_usage",
+                    "survey_question": "I regularly use these AI tools in my workflow.",
+                    "scale": "1-5 Likert",
+                    "current_score": null,
+                    "industry_benchmark": "Regular, integrated use",
+                    "gap_analysis": null
+                },
+                {
+                    "id": "ai_perceived_value",
+                    "survey_question": "AI tools noticeably improve my productivity or code quality.",
+                    "scale": "1-5 Likert",
+                    "current_score": null,
+                    "industry_benchmark": "Strongly Agree",
+                    "gap_analysis": null
+                },
+                {
+                    "id": "ai_knowledge_sharing",
+                    "survey_question": "Our team shares tips and practices for effective AI tool usage.",
+                    "scale": "1-5 Likert",
+                    "current_score": null,
+                    "industry_benchmark": "Active sharing (Strongly Agree)",
+                    "gap_analysis": null
+                },
+                {
+                    "id": "ai_governance",
+                    "survey_question": "The organisation provides guidance or governance for responsible AI tool use.",
+                    "scale": "1-5 Likert",
+                    "current_score": null,
+                    "industry_benchmark": "Clear governance (Strongly Agree)",
+                    "gap_analysis": null
+                }
+            ]
+        },
+        "security_posture": {
+            "description": "Security and compliance readiness",
+            "assessments": [
+                {
+                    "id": "sdlc_security_integration",
+                    "question": "Are automated security scanning tools (SAST, DAST, SCA) integrated into the CI/CD pipeline?",
+                    "scale": "Qualitative",
+                    "current_assessment": null,
+                    "industry_benchmark": "Fully automated shift-left security",
+                    "evidence": [],
+                    "risks": []
+                },
+                {
+                    "id": "data_governance",
+                    "question": "Does the organization have a clearly defined data governance policy?",
+                    "scale": "Qualitative",
+                    "current_assessment": null,
+                    "industry_benchmark": "Comprehensive audited policies",
+                    "evidence": [],
+                    "risks": []
+                },
+                {
+                    "id": "cloud_architecture_security",
+                    "question": "Are regular security reviews of cloud infrastructure and architecture conducted?",
+                    "scale": "Qualitative",
+                    "current_assessment": null,
+                    "industry_benchmark": "Regular automated reviews",
+                    "evidence": [],
+                    "risks": []
+                },
+                {
+                    "id": "incident_response",
+                    "question": "Is there a formal incident response plan that is regularly tested?",
+                    "scale": "Qualitative",
+                    "current_assessment": null,
+                    "industry_benchmark": "Formal, tested, updated plan",
+                    "evidence": [],
+                    "risks": []
+                }
+            ]
+        },
+        "product_operating_model": {
+            "description": "Product-first transformation indicators",
+            "assessments": [
+                {
+                    "id": "outcome_focus",
+                    "question": "\"Backlogs are prioritised by measurable product or customer value.\"",
+                    "scale": "1-5 Likert",
+                    "current_score": null,
+                    "industry_benchmark": "Strongly Agree",
+                    "observations": []
+                },
+                {
+                    "id": "team_structure",
+                    "question": "Are teams structured around long-lived products or temporary projects?",
+                    "scale": "Qualitative",
+                    "current_assessment": null,
+                    "industry_benchmark": "Long-lived product teams",
+                    "observations": []
+                },
+                {
+                    "id": "architectural_modularity",
+                    "question": "Is the product architecture designed for modularity and reusability?",
+                    "scale": "Qualitative",
+                    "current_assessment": null,
+                    "industry_benchmark": "Modular, scalable architecture",
+                    "observations": []
+                },
+                {
+                    "id": "continuous_improvement",
+                    "question": "\"We routinely conduct retrospectives or post-incident reviews and act on learnings.\"",
+                    "scale": "1-5 Likert",
+                    "current_score": null,
+                    "industry_benchmark": "Strongly Agree",
+                    "observations": []
+                }
+            ]
+        }
+    },
+    "engineering_performance_dashboard": {
+        "reporting_period": null,
+        "metrics_summary": [],
+        "trend_data": [],
+        "alerts": []
+    },
+    "action_plan": {
+        "insights": [],
+        "recommendations": [],
+        "roadmap_phase_alignment": {
+            "phase_1": [],
+            "phase_2": [],
+            "phase_3": []
+        }
+    },
+    "kpi_tracking": {
+        "targets": {
+            "velocity": {
+                "deployment_frequency": "< weekly",
+                "lead_time_for_changes": "< 1 week"
+            },
+            "stability": {
+                "change_failure_rate": "< 20%",
+                "time_to_restore_service": "< 1 day"
+            },
+            "productivity_quality": {
+                "cycle_time": "< 7 days",
+                "code_aberrancy": "< 9%"
+            },
+            "developer_experience": {
+                "satisfaction_trend": "Positive"
+            }
+        },
+        "quarterly_reviews": [],
+        "status": null
+    }
+}

@@ -1,0 +1,36 @@
+# Engineering Metrics Visualization Slide Deck Plan
+
+## Framework Recommendation
+
+- **Preferred Framework: React (Vite + TypeScript)**
+  - Mature ecosystem for narrative visualizations (e.g., `framer-motion`, `react-spring`, `react-use-gesture`) makes building smooth slide transitions trivial without heavy dependencies.
+  - Component abstraction aligns well with the nested structure of `slides/engineering_metrics_benchmark_template.json`, enabling data-driven slide generation and reuse of metric cards.
+  - Strong community support for keyboard navigation and accessibility packages, helping the non-scrollable, full-viewport slide requirement.
+
+
+## Slide Deck Structure
+
+| # | Slide Title | Primary Content | Info Button Message | Benchmark Comparison | Data Source |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Brand Intro | Display `images/logo_transperant.png`, company name “Mag Tech AI”, engagement subtitle (e.g., “Engineering Transformation Metrics Dashboard”). | “Welcome to Mag Tech AI’s transformation metrics brief. This overview frames the roadmap produced in the GNTeq assessment and explains why the session matters to stakeholders.” | Brief callout linking GNTeq’s current state to elite engineering performers, referencing the competitive gap outlined in the executive summary. | Static asset + `metadata.organization`, narrative from `engineering_transformation_assessment_and_strategic_roadmap.md` Executive Summary. |
+| 2 | Assessment Synopsis | Purpose of the visualization, scope, and what the data represents. | “Summarises the assessment scope across velocity, culture, AI, security, and product model so viewers know what the remaining slides measure.” | Text block noting that all subsequent metrics are compared against industry ‘elite/high performer’ benchmarks defined in DORA, BlueOptima, SPACE, and best-practice security frameworks. | `metadata`, `assessment_overview.executive_summary`. |
+| 3 | Strategic Pillars | Highlight the three pillars driving the programme. | “Explains each transformation pillar and how it maps to measured outcomes (velocity, product alignment, AI/security posture).” | Cite that these pillars reflect practices used by top-performing product-first organisations (per Chapters 1, 3, 4, and 5 in the assessment). | `assessment_overview.strategic_pillars`. |
+| 4 | Benchmark Sources | List benchmark documents and methodology summary. | “Clarifies where benchmark numbers originate (DORA reports, BlueOptima, SPACE research, security frameworks).” | Table comparing GNTeq data sources with cited elite benchmarks (e.g., Elite DORA thresholds < 1 day lead time, on-demand deployments). | `benchmarks_reference.source_documents`, citations in `engineering_transformation_assessment_and_strategic_roadmap.md`. |
+| 5 | DORA Overview | Introduce DORA framework, summarise velocity vs stability, visualise current vs benchmark placeholders. | “Defines each DORA metric and why it predicts business agility and customer trust.” | Chart comparing GNTeq baseline (once populated) vs elite thresholds (on-demand deployments, < 1 day LT, 0–15% CFR, < 1 hour MTTR, > 99.9% uptime). | `frameworks.dora`, Chapter 1.1 table in `engineering_transformation_assessment_and_strategic_roadmap.md`. |
+| 6 | DORA Metric Deep-Dive | Cards for each DORA metric with benchmark, current value, gap analysis narrative. | “Describes how each metric is collected, why it matters, and what improving it unlocks.” | Individual card comparisons of GNTeq measurement vs elite/high tiers, with contextual commentary drawn from the report’s case for change. | `frameworks.dora.metrics`. |
+| 7 | BlueOptima Drivers | Visualise behavioural drivers (commit frequency, PR cadence, etc.). | “Connects developer habits to system-level DORA outcomes to show causal relationships.” | Side-by-side violin/bar charts vs BlueOptima best benchmarks (commit every 1–2 days, PR < 3 days, cycle time < 7 days, intra-PR response < 9 hours, aberrancy < 5%, collaboration > 7 hours). | `frameworks.blueoptima.metrics`, Chapter 1.2 in `engineering_transformation_assessment_and_strategic_roadmap.md`. |
+| 8 | SPACE Dimensions | Radar or grid describing qualitative scores and targets. | “Explains how SPACE covers satisfaction, performance, activity, collaboration, and flow, and why culture impacts throughput.” | Radar overlay showing GNTeq survey scores vs desired “Strongly Agree” benchmark for each dimension. | `frameworks.space.dimensions`, Chapter 2. |
+| 9 | AI Adoption Readiness | Usage, value perception, governance status of AI tooling. | “Highlights current AI tool availability, usage, value, knowledge sharing, and governance maturity.” | Matrix comparing GNTeq Likert averages with target state of “Strongly Agree” (universal access, regular usage, noticeable value, shared practices, clear governance). | `frameworks.ai_adoption.metrics`, Chapter 3. |
+| 10 | Security & Compliance | CI/CD security, data governance, incident readiness. | “Outlines current security integration level and why shift-left practices reduce failure rates and compliance risks.” | Checklist showing GNTeq assessment vs mature DevSecOps baseline (fully automated SAST/DAST/SCA, comprehensive data governance, regular architecture reviews, tested incident response). | `frameworks.security_posture.assessments`, Chapter 4. |
+| 11 | Product Operating Model | Team structure, prioritisation, architecture readiness, continuous improvement. | “Explains how operating model choices influence product scalability and customer value delivery.” | Comparative indicators vs product-first benchmark (long-lived teams, modular architecture, value-based backlog, routine retrospectives). | `frameworks.product_operating_model.assessments`, Chapter 5. |
+| 12 | KPI & Action Dashboard | Targets, KPI status, roadmap phases with navigation to detailed reports. | “Summarises current progress, action backlog, and how improvements track against elite benchmarks.” | Scorecards showing progress towards velocity/stability targets (< weekly deploys, < 1 week lead time, CFR < 20%, MTTR < 1 day, cycle time < 7 days, aberrancy < 9%, satisfaction trending positive) alongside roadmap milestones. | `kpi_tracking`, `action_plan`, Chapter 9 & 10. |
+
+## Visual & Interaction Guidelines
+
+- **Viewport** Anchor each slide to `100vw` × `100vh`; disable overflow to prevent scrolling.
+- **Navigation Controls** Persist left/right (and optional keyboard arrow) controls; disable when at the ends to guide linear storytelling.
+- **Background Styling** Use a solid brand-approved gradient or color; ensure sufficient contrast for data visualizations.
+- **Info Button Pattern** Each slide includes a floating “Info” icon that opens a tooltip or modal with (a) a short explanation of the slide’s purpose and (b) why the data helps decision-making; the copy is defined in the slide table above.
+- **Data Binding** Load `slides/engineering_metrics_benchmark_template.json` once at startup; pass slice-specific data into slide components via props.
+- **Responsiveness** Optimize for 16:9 desktop presentations; provide a condensed layout for tablets while maintaining slide boundaries.
+- **Asset Management** Import the logo via relative path `../images/logo_transperant.png`; provide fallback text (`Mag Tech AI`) for accessibility.
