@@ -1,5 +1,7 @@
 import './index.css'
 import './App.css'
+import './styles/ChatSidebar.css'
+import './styles/DoraMetricsSlide.css'
 import { SlideDeck } from './components/SlideDeck'
 import { buildSlides } from './services/slideBuilder'
 

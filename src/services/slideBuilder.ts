@@ -1,6 +1,6 @@
 import data from '../../engineering_metrics_benchmark_template.json'
 import { toTrimmedString, toTrimmedStringArray, toSourcesArray } from '../utils/dataHelpers'
-import type { Slide, BrandSlide, SynopsisSlide, MetaDetail } from '../types/slide.types'
+import type { Slide, BrandSlide, SynopsisSlide, DoraMetricsSlide, MetaDetail, DoraMetric } from '../types/slide.types'
 
 const ORGANISATION_FALLBACK = 'Mag Tech AI'
 
@@ -92,5 +92,44 @@ Survey insights, stakeholder interviews, CI/CD telemetry, and security posture r
       'All metrics are benchmarked against elite performance targets across DORA, BlueOptima, SPACE, AI readiness, and security frameworks.',
   }
 
-  return [introSlide, synopsisSlide]
+  // DORA Metrics Slide
+  const doraMetrics: DoraMetric[] = (data.frameworks.dora.metrics as any[]).map((metric) => ({
+    id: metric.id,
+    name: metric.name,
+    category: metric.category,
+    definition: metric.definition,
+    current_value: metric.current_value,
+    current_value_display: metric.current_value_display,
+    benchmark_value: metric.benchmark_value,
+    performance_tier: metric.performance_tier,
+    gap_analysis: metric.gap_analysis,
+  }))
+
+  // Build insights from metrics
+  const doraInsights = doraMetrics.map(metric => {
+    const notes = (metric as any).notes || []
+    const notesText = notes.length > 0 ? `\n\nNotes:\n${notes.map((n: string) => `• ${n}`).join('\n')}` : ''
+    return `**${metric.name}**\n` +
+           `Current: ${(metric as any).current_value_display || metric.current_value} | ` +
+           `Benchmark: ${metric.benchmark_value} | ` +
+           `Tier: ${metric.performance_tier}\n\n` +
+           `Gap Analysis: ${metric.gap_analysis}${notesText}`
+  }).join('\n\n---\n\n')
+
+  const doraSlide: DoraMetricsSlide = {
+    id: 'dora-metrics',
+    layout: 'dora-metrics',
+    title: 'DORA Metrics Dashboard',
+    subtitle: 'System-level delivery performance vs. elite benchmarks',
+    metrics: doraMetrics,
+    info: {
+      title: 'DORA Metrics Insights',
+      body: 'DORA (DevOps Research and Assessment) metrics measure software delivery performance across velocity and stability dimensions.',
+      utility: 'These metrics predict organizational performance and identify bottlenecks in the delivery pipeline.',
+      insights: doraInsights
+    },
+    benchmark: 'Elite performers deploy on-demand, with <1 day lead time, <15% failure rate, and <1 hour recovery time.',
+  }
+
+  return [introSlide, synopsisSlide, doraSlide]
 }

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Info, Moon, Sun } from 'lucide-react'
 import { useDrag } from '@use-gesture/react'
+import { ChevronLeft, ChevronRight, Info, MessageSquare } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useTheme } from '../hooks/useTheme'
 import { BrandSlide } from './BrandSlide'
 import { SynopsisSlide } from './SynopsisSlide'
-import { SlideInfo } from './SlideInfo'
+import { DoraMetricsSlide } from './DoraMetricsSlide'
+import { ChatSidebar } from './ChatSidebar'
 import type { Slide } from '../types/slide.types'
 
 type SlideDeckProps = {
@@ -15,7 +16,7 @@ type SlideDeckProps = {
 export function SlideDeck({ slides }: SlideDeckProps) {
   const { theme, toggleTheme } = useTheme()
   const [index, setIndex] = useState(0)
-  const [infoOpen, setInfoOpen] = useState(false)
+  const [infoTrigger, setInfoTrigger] = useState(0)
 
   const slide = slides[index]
   const goNext = () => setIndex((idx) => Math.min(idx + 1, slides.length - 1))
@@ -28,8 +29,9 @@ export function SlideDeck({ slides }: SlideDeckProps) {
     }
   })
 
+  // Reset trigger when slide changes
   useEffect(() => {
-    setInfoOpen(false)
+    // Trigger is reset automatically by component
   }, [index])
 
   useEffect(() => {
@@ -49,76 +51,60 @@ export function SlideDeck({ slides }: SlideDeckProps) {
 
   return (
     <div className="deck">
-      <div className="chrome">
-        <button
-          type="button"
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
-        >
-          {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-        </button>
-      </div>
-
-      <div className="viewport" {...bind()} role="presentation">
-        <AnimatePresence mode="wait">
-          <motion.section
-            key={slide.id}
-            className="slide"
-            initial={{ opacity: 0, x: 80 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -60 }}
-            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-          >
-            <div className="slide-content">
-              {slide.layout === 'brand' ? (
-                <BrandSlide slide={slide} />
-              ) : slide.layout === 'synopsis' ? (
-                <SynopsisSlide slide={slide} />
-              ) : null}
-            </div>
-            <button
-              type="button"
-              className="info-button"
-              onClick={() => setInfoOpen((open) => !open)}
-              aria-expanded={infoOpen}
-              aria-controls="slide-info"
+      <div className="deck-content">
+        <div className="viewport" {...bind()} role="presentation">
+          <AnimatePresence mode="wait">
+            <motion.section
+              key={slide.id}
+              className="slide"
+              initial={{ opacity: 0, x: 80 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -60 }}
+              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
             >
-              <Info size={18} />
-            </button>
-            <AnimatePresence>
-              {infoOpen && (
-                <motion.aside
-                  id="slide-info"
-                  initial={{ opacity: 0, x: 40 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 40 }}
-                  transition={{ duration: 0.24 }}
-                  className="info-panel"
-                >
-                  <SlideInfo slide={slide} />
-                </motion.aside>
-              )}
-            </AnimatePresence>
-          </motion.section>
-        </AnimatePresence>
+              <div className="slide-content">
+                {slide.layout === 'brand' ? (
+                  <BrandSlide slide={slide} />
+                ) : slide.layout === 'synopsis' ? (
+                  <SynopsisSlide slide={slide} />
+                ) : slide.layout === 'dora-metrics' ? (
+                  <DoraMetricsSlide 
+                    metrics={slide.metrics} 
+                    title={slide.title} 
+                    subtitle={slide.subtitle} 
+                  />
+                ) : null}
+              </div>
+              <button
+                type="button"
+                className="chat-toggle-button"
+                onClick={() => setInfoTrigger((prev) => prev + 1)}
+                aria-label="Show slide info"
+              >
+                <MessageSquare size={18} />
+              </button>
+            </motion.section>
+          </AnimatePresence>
+        </div>
+
+        <div className="controls">
+          <button type="button" className="nav" onClick={goPrev} disabled={index === 0}>
+            <ChevronLeft aria-hidden size={20} /> Prev
+          </button>
+          <div className="progress" aria-live="polite">
+            <span className="progress-text">
+              {index + 1}
+              <span className="progress-separator"> / </span>
+              {slides.length}
+            </span>
+          </div>
+          <button type="button" className="nav" onClick={goNext} disabled={index === slides.length - 1}>
+            Next <ChevronRight aria-hidden size={20} />
+          </button>
+        </div>
       </div>
 
-      <div className="controls">
-        <button type="button" className="nav" onClick={goPrev} disabled={index === 0}>
-          <ChevronLeft aria-hidden size={20} /> Prev
-        </button>
-        <div className="progress" aria-live="polite">
-          <span className="progress-text">
-            {index + 1}
-            <span className="progress-separator"> / </span>
-            {slides.length}
-          </span>
-        </div>
-        <button type="button" className="nav" onClick={goNext} disabled={index === slides.length - 1}>
-          Next <ChevronRight aria-hidden size={20} />
-        </button>
-      </div>
+      <ChatSidebar currentSlide={slide} triggerInfo={infoTrigger} theme={theme} onToggleTheme={toggleTheme} />
     </div>
   )
 }

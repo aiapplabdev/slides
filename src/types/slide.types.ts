@@ -2,6 +2,7 @@ export type InfoBlock = {
   title: string
   body: string
   utility?: string
+  insights?: string
 }
 
 export type HeroBlock = {
@@ -41,4 +42,26 @@ export type SynopsisSlide = {
   benchmark?: string
 }
 
-export type Slide = BrandSlide | SynopsisSlide
+export type DoraMetric = {
+  id: string
+  name: string
+  category: string
+  definition: string
+  current_value: number
+  current_value_display?: string
+  benchmark_value: number
+  performance_tier: string
+  gap_analysis: string
+}
+
+export type DoraMetricsSlide = {
+  id: 'dora-metrics'
+  layout: 'dora-metrics'
+  title: string
+  subtitle?: string
+  metrics: DoraMetric[]
+  info: InfoBlock
+  benchmark?: string
+}
+
+export type Slide = BrandSlide | SynopsisSlide | DoraMetricsSlide
