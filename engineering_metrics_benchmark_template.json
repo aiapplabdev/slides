@@ -50,78 +50,100 @@
                     "name": "Deployment Frequency",
                     "category": "Velocity",
                     "definition": "How often code is deployed to production.",
-                    "measurement_method": "Count deployments per time period.",
-                    "scale": "Daily/Weekly/Monthly/Quarterly",
                     "current_value": 2,
-                    "current_value_display": "Bi-weekly",
-                    "current_period": "Q4 2024",
-                    "industry_benchmark": "On-demand (multiple times per day)",
+                    "current_value_display": "2 per month",
                     "benchmark_value": 30,
                     "performance_tier": "Low",
                     "gap_analysis": "Current deployment frequency is 14x slower than elite performers. Manual processes and lack of automation create bottlenecks.",
-                    "notes": ["Average 2 deployments per month", "Deployments require manual approval and coordination"]
+                    "notes": ["Average 2 deployments per month", "Deployments require manual approval and coordination"],
+                    "telemetry": {
+                        "value": 1.8,
+                        "value_display": "1.8 per month",
+                        "source": "CI/CD pipeline logs",
+                        "measurement_period": "Last 90 days",
+                        "variance_from_survey": -10,
+                        "notes": "Actual deployment count from Jenkins/GitLab CI logs shows slightly lower frequency than survey responses"
+                    }
                 },
                 {
                     "id": "lead_time_for_changes",
                     "name": "Lead Time for Changes",
                     "category": "Velocity",
                     "definition": "Time from first commit to production deployment.",
-                    "measurement_method": "Track commit-to-prod duration.",
-                    "scale": "Hours/Days",
                     "current_value": 8.5,
                     "current_value_display": "8.5 days",
-                    "current_period": "Q4 2024",
-                    "industry_benchmark": "< 1 day",
                     "benchmark_value": 1,
                     "performance_tier": "Low",
                     "gap_analysis": "Lead time is 7-10x longer than elite benchmark. Extended code review cycles and manual testing contribute to delays.",
-                    "notes": ["Average 8.5 days from commit to production", "Includes manual QA and staging environment testing"]
+                    "notes": ["Average 8.5 days from commit to production", "Includes manual QA and staging environment testing"],
+                    "telemetry": {
+                        "value": 10.2,
+                        "value_display": "10.2 days",
+                        "source": "Git + CI/CD correlation",
+                        "measurement_period": "Last 90 days",
+                        "variance_from_survey": 20,
+                        "notes": "Telemetry shows 20% longer lead time than survey perception, indicating developers underestimate actual duration"
+                    }
                 },
                 {
                     "id": "change_failure_rate",
                     "name": "Change Failure Rate",
                     "category": "Stability",
                     "definition": "Percentage of deployments that degrade service.",
-                    "measurement_method": "Count failed deployments / total deployments.",
-                    "scale": "Percentage",
                     "current_value": 28,
-                    "current_period": "Q4 2024",
-                    "industry_benchmark": "0-15%",
+                    "current_value_display": "28%",
                     "benchmark_value": 15,
                     "performance_tier": "Low",
                     "gap_analysis": "Failure rate nearly 2x higher than acceptable threshold. Insufficient automated testing and lack of staging environment parity.",
-                    "notes": ["7 out of 25 deployments required rollback or hotfix", "Most failures due to environment configuration issues"]
+                    "notes": ["7 out of 25 deployments required rollback or hotfix", "Most failures due to environment configuration issues"],
+                    "telemetry": {
+                        "value": 32,
+                        "value_display": "32%",
+                        "source": "Incident management system",
+                        "measurement_period": "Last 90 days",
+                        "variance_from_survey": 14,
+                        "notes": "Actual failure rate 14% higher than survey responses - developers may not be aware of all production issues"
+                    }
                 },
                 {
                     "id": "time_to_restore_service",
                     "name": "Time to Restore",
                     "category": "Stability",
                     "definition": "Mean time to recover from production failure.",
-                    "measurement_method": "Track incident detection-to-resolution duration.",
-                    "scale": "Minutes/Hours",
                     "current_value": 5.2,
                     "current_value_display": "5.2 hours",
-                    "current_period": "Q4 2024",
-                    "industry_benchmark": "< 1 hour",
                     "benchmark_value": 1,
                     "performance_tier": "Low",
                     "gap_analysis": "Recovery time 4-6x slower than elite standard. No automated rollback mechanisms and limited monitoring visibility.",
-                    "notes": ["Average MTTR of 5.2 hours", "Manual rollback process requires coordination across teams"]
+                    "notes": ["Average MTTR of 5.2 hours", "Manual rollback process requires coordination across teams"],
+                    "telemetry": {
+                        "value": 6.8,
+                        "value_display": "6.8 hours",
+                        "source": "PagerDuty + incident logs",
+                        "measurement_period": "Last 90 days",
+                        "variance_from_survey": 31,
+                        "notes": "Telemetry shows 31% longer recovery time - survey responses may reflect best-case scenarios rather than averages"
+                    }
                 },
                 {
                     "id": "reliability",
                     "name": "Reliability / Availability",
                     "category": "Stability",
                     "definition": "System availability against SLAs/SLOs.",
-                    "measurement_method": "Monitor uptime/SLO metrics.",
-                    "scale": "Percentage",
                     "current_value": 98.7,
-                    "current_period": "Q4 2024",
-                    "industry_benchmark": "> 99.9% uptime",
+                    "current_value_display": "98.7%",
                     "benchmark_value": 99.9,
                     "performance_tier": "Medium",
                     "gap_analysis": "Availability below three-nines target. Unplanned downtime from deployment failures and infrastructure issues.",
-                    "notes": ["Monthly uptime: 98.7%", "3-4 hours of unplanned downtime per month", "No formal SLO tracking in place"]
+                    "notes": ["Monthly uptime: 98.7%", "3-4 hours of unplanned downtime per month", "No formal SLO tracking in place"],
+                    "telemetry": {
+                        "value": 98.4,
+                        "value_display": "98.4%",
+                        "source": "APM + monitoring dashboards",
+                        "measurement_period": "Last 90 days",
+                        "variance_from_survey": -0.3,
+                        "notes": "Telemetry closely matches survey data - good alignment between perception and reality"
+                    }
                 }
             ]
         },
@@ -131,79 +153,122 @@
                 {
                     "id": "commit_frequency",
                     "name": "Commit Frequency",
+                    "category": "Code Velocity",
                     "definition": "Average interval between commits per developer.",
-                    "measurement_method": "Analyze VCS commit timestamps.",
-                    "scale": "Days",
                     "current_value": 3.5,
                     "current_value_display": "Every 3.5 days",
-                    "industry_benchmark": "Every 1-2 days",
                     "benchmark_value": 1.5,
                     "performance_tier": "Medium",
-                    "gap_analysis": "Commit frequency 2x slower than best practice. Developers batching changes rather than committing incrementally."
+                    "gap_analysis": "Commit frequency 2x slower than best practice. Developers batching changes rather than committing incrementally.",
+                    "notes": ["Average 3.5 days between commits", "Developers batching changes instead of incremental commits"],
+                    "telemetry": {
+                        "value": 4.2,
+                        "value_display": "Every 4.2 days",
+                        "source": "Git commit logs",
+                        "measurement_period": "Last 90 days",
+                        "variance_from_survey": 20,
+                        "notes": "Actual commit frequency 20% slower than survey responses - developers may overestimate their commit cadence"
+                    }
                 },
                 {
                     "id": "pr_frequency",
                     "name": "Pull Request Frequency",
+                    "category": "Code Velocity",
                     "definition": "Average interval between PR submissions.",
-                    "measurement_method": "Track PR creation timestamps.",
-                    "scale": "Days",
                     "current_value": 6,
                     "current_value_display": "Every 6 days",
-                    "industry_benchmark": "< 3 days",
                     "benchmark_value": 3,
                     "performance_tier": "Low",
-                    "gap_analysis": "PR frequency 2x slower than target. Large PRs create review bottlenecks and increase merge conflicts."
+                    "gap_analysis": "PR frequency 2x slower than target. Large PRs create review bottlenecks and increase merge conflicts.",
+                    "notes": ["Average 6 days between PRs", "Large PR sizes causing review delays"],
+                    "telemetry": {
+                        "value": 7.1,
+                        "value_display": "Every 7.1 days",
+                        "source": "GitHub/GitLab PR data",
+                        "measurement_period": "Last 90 days",
+                        "variance_from_survey": 18,
+                        "notes": "Actual PR frequency 18% slower than perceived - developers underestimate time between PRs"
+                    }
                 },
                 {
                     "id": "cycle_time",
                     "name": "Cycle Time",
+                    "category": "Code Velocity",
                     "definition": "Time from first commit on branch to PR merge.",
-                    "measurement_method": "Measure branch lifetime to merge.",
-                    "scale": "Days",
                     "current_value": 12,
                     "current_value_display": "12 days",
-                    "industry_benchmark": "< 7 days",
                     "benchmark_value": 7,
                     "performance_tier": "Low",
-                    "gap_analysis": "Cycle time 2x longer than benchmark. Extended review times and context switching slow down merge velocity."
+                    "gap_analysis": "Cycle time 2x longer than benchmark. Extended review times and context switching slow down merge velocity.",
+                    "notes": ["Average 12 days from first commit to merge", "Review delays and context switching are main bottlenecks"],
+                    "telemetry": {
+                        "value": 14.3,
+                        "value_display": "14.3 days",
+                        "source": "Git branch analytics",
+                        "measurement_period": "Last 90 days",
+                        "variance_from_survey": 19,
+                        "notes": "Actual cycle time 19% longer than survey - developers underestimate branch lifetime"
+                    }
                 },
                 {
                     "id": "intra_pr_activity",
                     "name": "Intra-PR Activity",
+                    "category": "Collaboration",
                     "definition": "Average response time to PR comments.",
-                    "measurement_method": "Analyze review/comment timestamps.",
-                    "scale": "Hours",
                     "current_value": 21,
                     "current_value_display": "21 hours",
-                    "industry_benchmark": "< 9 hours",
                     "benchmark_value": 9,
                     "performance_tier": "Low",
-                    "gap_analysis": "Response time 2-3x slower than target. Asynchronous work patterns and limited dedicated review time."
+                    "gap_analysis": "Response time 2-3x slower than target. Asynchronous work patterns and limited dedicated review time.",
+                    "notes": ["Average 21 hours to respond to PR comments", "Async work patterns causing delays"],
+                    "telemetry": {
+                        "value": 26.5,
+                        "value_display": "26.5 hours",
+                        "source": "PR comment timestamps",
+                        "measurement_period": "Last 90 days",
+                        "variance_from_survey": 26,
+                        "notes": "Actual response time 26% slower than perceived - significant gap in awareness of review delays"
+                    }
                 },
                 {
                     "id": "code_aberrancy",
                     "name": "Code Aberrancy",
+                    "category": "Code Quality",
                     "definition": "Percentage of unmaintainable or complex code.",
-                    "measurement_method": "Static analysis / maintainability scoring.",
-                    "scale": "Percentage",
                     "current_value": 12,
-                    "industry_benchmark": "< 5%",
+                    "current_value_display": "12%",
                     "benchmark_value": 5,
                     "performance_tier": "Low",
-                    "gap_analysis": "Code aberrancy 2.4x higher than acceptable threshold. Technical debt accumulation and inconsistent coding standards."
+                    "gap_analysis": "Code aberrancy 2.4x higher than acceptable threshold. Technical debt accumulation and inconsistent coding standards.",
+                    "notes": ["12% of codebase flagged as unmaintainable", "Technical debt accumulating"],
+                    "telemetry": {
+                        "value": 15.2,
+                        "value_display": "15.2%",
+                        "source": "SonarQube/CodeClimate",
+                        "measurement_period": "Last 90 days",
+                        "variance_from_survey": 27,
+                        "notes": "Static analysis shows 27% more code quality issues than developers perceive"
+                    }
                 },
                 {
                     "id": "collaboration_time",
                     "name": "Collaboration Time",
+                    "category": "Collaboration",
                     "definition": "Average daily synchronous overlap on repositories.",
-                    "measurement_method": "Calendar/activity overlap analysis.",
-                    "scale": "Hours per day",
                     "current_value": 4.5,
                     "current_value_display": "4.5 hours/day",
-                    "industry_benchmark": "> 7 hours",
                     "benchmark_value": 7,
                     "performance_tier": "Medium",
-                    "gap_analysis": "Collaboration time 30-40% below target. Distributed team across time zones limits synchronous pairing opportunities."
+                    "gap_analysis": "Collaboration time 30-40% below target. Distributed team across time zones limits synchronous pairing opportunities.",
+                    "notes": ["4.5 hours average daily overlap", "Distributed team across time zones"],
+                    "telemetry": {
+                        "value": 3.8,
+                        "value_display": "3.8 hours/day",
+                        "source": "Calendar + Git activity correlation",
+                        "measurement_period": "Last 90 days",
+                        "variance_from_survey": -16,
+                        "notes": "Actual collaboration time 16% less than perceived - developers overestimate synchronous work time"
+                    }
                 }
             ]
         },

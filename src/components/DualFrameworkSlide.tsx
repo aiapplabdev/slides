@@ -2,25 +2,38 @@ import { useEffect, useRef, useState } from 'react'
 import * as echarts from 'echarts'
 import type { EChartsOption } from 'echarts'
 
+type TelemetryData = {
+  value: number
+  value_display?: string
+  source: string
+  measurement_period: string
+  confidence: string
+  variance_from_survey: number
+  notes?: string
+}
+
 type DoraMetric = {
   id: string
   name: string
   category: string
+  definition: string
   current_value: number
   current_value_display?: string
   benchmark_value: number
   performance_tier: string
   gap_analysis: string
+  telemetry?: TelemetryData
 }
 
-type DoraMetricsSlideProps = {
+type DualFrameworkSlideProps = {
   metrics: DoraMetric[]
   title: string
+  subtitle?: string
 }
 
-type ChartView = 'overview' | 'comparison' | 'performance'
+type ChartView = 'overview' | 'comparison' | 'performance' | 'telemetry'
 
-export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideProps) {
+export function DualFrameworkSlide({ metrics, title, subtitle }: DualFrameworkSlideProps) {
   const chartRef = useRef<HTMLDivElement>(null)
   const [activeView, setActiveView] = useState<ChartView>('overview')
   const [whatIfMetrics, setWhatIfMetrics] = useState<Record<string, number>>({})
@@ -98,7 +111,21 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
       }
     }) : []
     
+    // Calculate telemetry performance percentages (only for radar chart)
+    const telemetryPercentages = activeView === 'performance' ? metrics.map((m) => {
+      if (!m.telemetry) return 0
+      const telemetryValue = m.telemetry.value
+      const lowerIsBetter = ['change_failure_rate', 'time_to_restore_service', 'lead_time_for_changes'].includes(m.id)
+      
+      if (lowerIsBetter) {
+        return Math.max(0, Math.min(100, (m.benchmark_value / telemetryValue) * 100))
+      } else {
+        return Math.max(0, Math.min(100, (telemetryValue / m.benchmark_value) * 100))
+      }
+    }) : []
+    
     const hasWhatIfChanges = activeView === 'performance' && metrics.some(m => whatIfMetrics[m.id] !== m.current_value)
+    const hasTelemetryData = metrics.some(m => m.telemetry)
 
     // Get text color based on current theme
     const textColor = currentTheme === 'dark' ? '#ffffff' : '#000000'
@@ -214,8 +241,12 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
         }
       },
       legend: {
-        data: hasWhatIfChanges
+        data: hasWhatIfChanges && hasTelemetryData
+          ? ['Survey Response', 'Actual Telemetry', 'What-If Scenario', 'Elite Target']
+          : hasWhatIfChanges
           ? ['Current Performance', 'What-If Scenario', 'Elite Target']
+          : hasTelemetryData
+          ? ['Survey Response', 'Actual Telemetry', 'Elite Target']
           : ['Current Performance', 'Elite Target'],
         bottom: 5,
         textStyle: {
@@ -282,7 +313,7 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
           data: [
             {
               value: performancePercentages,
-              name: 'Current Performance',
+              name: hasTelemetryData ? 'Survey Response' : 'Current Performance',
               areaStyle: {
                 color: 'rgba(239, 68, 68, 0.25)'
               },
@@ -299,6 +330,26 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
                 show: false
               }
             },
+            ...(hasTelemetryData ? [{
+              value: telemetryPercentages,
+              name: 'Actual Telemetry',
+              areaStyle: {
+                color: 'rgba(168, 85, 247, 0.2)'
+              },
+              lineStyle: {
+                color: '#a855f7',
+                width: 2.5,
+                type: 'solid' as const
+              },
+              itemStyle: {
+                color: '#a855f7',
+                borderWidth: 2,
+                borderColor: '#fff'
+              },
+              label: {
+                show: false
+              }
+            }] : []),
             ...(hasWhatIfChanges ? [{
               value: whatIfPercentages,
               name: 'What-If Scenario',
@@ -361,9 +412,12 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
     }
   }, [metrics, activeView, whatIfMetrics, currentTheme])
 
-  // Get velocity and stability metrics
-  const velocityMetrics = metrics.filter(m => m.category === 'Velocity')
-  const stabilityMetrics = metrics.filter(m => m.category === 'Stability')
+  // Get unique categories and group metrics
+  const categories = Array.from(new Set(metrics.map(m => m.category)))
+  const metricsByCategory = categories.map(category => ({
+    name: category,
+    metrics: metrics.filter(m => m.category === category)
+  }))
 
   // Calculate what-if performance
   const calculatePerformance = (metricId: string, value: number, benchmarkValue: number) => {
@@ -401,7 +455,7 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
   }
 
   return (
-    <div className="dora-metrics-slide">
+    <div className="dual-framework-slide">
       <div className="slide-header">
         <h2>{title}</h2>
         {subtitle && <p>{subtitle}</p>}
@@ -422,7 +476,13 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
                   className={`tab-inline ${activeView === 'comparison' ? 'active' : ''}`}
                   onClick={() => setActiveView('comparison')}
                 >
-                  Comparison
+                  Survey Avg
+                </button>
+                <button
+                  className={`tab-inline ${activeView === 'telemetry' ? 'active' : ''}`}
+                  onClick={() => setActiveView('telemetry')}
+                >
+                  Survey vs Telemetry
                 </button>
                 <button
                   className={`tab-inline ${activeView === 'performance' ? 'active' : ''}`}
@@ -433,34 +493,22 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
               </div>
             </div>
             <div className="overview-content">
-              <div className="category-group">
-                <h3 className="category-title">Velocity</h3>
-                <div className="metrics-row">
-                  {velocityMetrics.map((metric) => (
-                    <div key={metric.id} className={`metric-card ${metric.performance_tier.toLowerCase()}`}>
-                      <div className="metric-name">{metric.name}</div>
-                      <div className="metric-value">
-                        {metric.current_value_display || metric.current_value}
+              {metricsByCategory.map((categoryGroup) => (
+                <div key={categoryGroup.name} className="category-group">
+                  <h3 className="category-title">{categoryGroup.name}</h3>
+                  <div className="metrics-row">
+                    {categoryGroup.metrics.map((metric) => (
+                      <div key={metric.id} className={`metric-card ${metric.performance_tier.toLowerCase()}`}>
+                        <div className="metric-name">{metric.name}</div>
+                        <div className="metric-value">
+                          {metric.current_value_display || metric.current_value}
+                        </div>
+                        <div className="metric-benchmark">Target: {metric.benchmark_value}</div>
                       </div>
-                      <div className="metric-benchmark">Target: {metric.benchmark_value}</div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="category-group">
-                <h3 className="category-title">Stability</h3>
-                <div className="metrics-row">
-                  {stabilityMetrics.map((metric) => (
-                    <div key={metric.id} className={`metric-card ${metric.performance_tier.toLowerCase()}`}>
-                      <div className="metric-name">{metric.name}</div>
-                      <div className="metric-value">
-                        {metric.current_value_display || metric.current_value}
-                      </div>
-                      <div className="metric-benchmark">Target: {metric.benchmark_value}{metric.id === 'reliability' ? '%' : ''}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         )}
@@ -479,7 +527,13 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
                   className={`tab-inline ${activeView === 'comparison' ? 'active' : ''}`}
                   onClick={() => setActiveView('comparison')}
                 >
-                  Comparison
+                  Survey Avg
+                </button>
+                <button
+                  className={`tab-inline ${activeView === 'telemetry' ? 'active' : ''}`}
+                  onClick={() => setActiveView('telemetry')}
+                >
+                  Survey vs Telemetry
                 </button>
                 <button
                   className={`tab-inline ${activeView === 'performance' ? 'active' : ''}`}
@@ -567,7 +621,13 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
                   className={`tab-inline ${activeView === 'comparison' ? 'active' : ''}`}
                   onClick={() => setActiveView('comparison')}
                 >
-                  Comparison
+                  Survey Avg
+                </button>
+                <button
+                  className={`tab-inline ${activeView === 'telemetry' ? 'active' : ''}`}
+                  onClick={() => setActiveView('telemetry')}
+                >
+                  Survey vs Telemetry
                 </button>
                 <button
                   className={`tab-inline ${activeView === 'performance' ? 'active' : ''}`}
@@ -672,6 +732,104 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {activeView === 'telemetry' && (
+          <div className="chart-container">
+            <div className="chart-header">
+              <div className="chart-tabs-inline">
+                <button
+                  className={`tab-inline ${activeView === 'overview' ? 'active' : ''}`}
+                  onClick={() => setActiveView('overview')}
+                >
+                  Overview
+                </button>
+                <button
+                  className={`tab-inline ${activeView === 'comparison' ? 'active' : ''}`}
+                  onClick={() => setActiveView('comparison')}
+                >
+                  Survey Avg
+                </button>
+                <button
+                  className={`tab-inline ${activeView === 'telemetry' ? 'active' : ''}`}
+                  onClick={() => setActiveView('telemetry')}
+                >
+                  Survey vs Telemetry
+                </button>
+                <button
+                  className={`tab-inline ${activeView === 'performance' ? 'active' : ''}`}
+                  onClick={() => setActiveView('performance')}
+                >
+                  Performance
+                </button>
+              </div>
+            </div>
+            <div className="comparison-matrix">
+              <table className="metrics-table telemetry-table">
+                <thead>
+                  <tr>
+                    <th>Metric</th>
+                    <th>Survey Response</th>
+                    <th>Actual Telemetry</th>
+                    <th>Variance</th>
+                    <th>Data Source</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {metrics.map((metric) => {
+                    const hasTelemetry = metric.telemetry
+                    const variance = hasTelemetry ? metric.telemetry.variance_from_survey : 0
+                    const varianceColor = Math.abs(variance) < 10 ? '#10b981' : Math.abs(variance) < 25 ? '#f59e0b' : '#ef4444'
+                    const alignmentText = Math.abs(variance) < 10 ? 'Good Alignment' : Math.abs(variance) < 25 ? 'Moderate Gap' : 'Significant Gap'
+                    
+                    return (
+                      <tr key={metric.id}>
+                        <td className="metric-name-cell">
+                          <strong>{metric.name}</strong>
+                        </td>
+                        <td className="value-cell">
+                          <div>{metric.current_value_display || metric.current_value}</div>
+                          <div className="numeric-value">({metric.current_value})</div>
+                        </td>
+                        <td className="value-cell telemetry-value">
+                          {hasTelemetry ? (
+                            <>
+                              <div>{metric.telemetry.value_display || metric.telemetry.value}</div>
+                              <div className="numeric-value">({metric.telemetry.value})</div>
+                            </>
+                          ) : 'N/A'}
+                        </td>
+                        <td className="variance-cell">
+                          {hasTelemetry ? (
+                            <div className="variance-indicator">
+                              <span className="variance-badge" style={{ 
+                                backgroundColor: `${varianceColor}20`,
+                                color: varianceColor,
+                                borderColor: varianceColor
+                              }}>
+                                {variance > 0 ? '+' : ''}{variance.toFixed(1)}%
+                              </span>
+                              <span className="alignment-text" style={{ color: varianceColor }}>
+                                {alignmentText}
+                              </span>
+                            </div>
+                          ) : 'N/A'}
+                        </td>
+                        <td className="source-cell">
+                          {hasTelemetry ? (
+                            <div className="source-info">
+                              <div className="source-name">{metric.telemetry.source}</div>
+                              <div className="source-period">{metric.telemetry.measurement_period}</div>
+                            </div>
+                          ) : 'No telemetry data'}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         )}

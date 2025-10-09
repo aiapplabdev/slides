@@ -1,6 +1,6 @@
 import data from '../../engineering_metrics_benchmark_template.json'
 import { toTrimmedString, toTrimmedStringArray, toSourcesArray } from '../utils/dataHelpers'
-import type { Slide, BrandSlide, SynopsisSlide, DoraMetricsSlide, MetaDetail, DoraMetric } from '../types/slide.types'
+import type { Slide, BrandSlide, SynopsisSlide, DualFrameworkSlide, MetaDetail, DoraMetric } from '../types/slide.types'
 
 const ORGANISATION_FALLBACK = 'Mag Tech AI'
 
@@ -103,20 +103,32 @@ Survey insights, stakeholder interviews, CI/CD telemetry, and security posture r
     benchmark_value: metric.benchmark_value,
     performance_tier: metric.performance_tier,
     gap_analysis: metric.gap_analysis,
+    telemetry: metric.telemetry,
   }))
 
   // Build insights from metrics
   const doraInsights = doraMetrics.map(metric => {
     const notes = (metric as any).notes || []
     const notesText = notes.length > 0 ? `\n\nNotes:\n${notes.map((n: string) => `• ${n}`).join('\n')}` : ''
+    
+    // Add telemetry insights if available
+    const telemetryText = metric.telemetry 
+      ? `\n\n**Telemetry vs Survey:**\n` +
+        `Survey: ${(metric as any).current_value_display || metric.current_value} | ` +
+        `Actual: ${metric.telemetry.value_display || metric.telemetry.value} | ` +
+        `Variance: ${metric.telemetry.variance_from_survey > 0 ? '+' : ''}${metric.telemetry.variance_from_survey}%\n` +
+        `Source: ${metric.telemetry.source} (${metric.telemetry.measurement_period})\n` +
+        `${metric.telemetry.notes || ''}`
+      : ''
+    
     return `**${metric.name}**\n` +
            `Current: ${(metric as any).current_value_display || metric.current_value} | ` +
            `Benchmark: ${metric.benchmark_value} | ` +
            `Tier: ${metric.performance_tier}\n\n` +
-           `Gap Analysis: ${metric.gap_analysis}${notesText}`
+           `Gap Analysis: ${metric.gap_analysis}${notesText}${telemetryText}`
   }).join('\n\n---\n\n')
 
-  const doraSlide: DoraMetricsSlide = {
+  const doraSlide: DualFrameworkSlide = {
     id: 'dora-metrics',
     layout: 'dora-metrics',
     title: 'DORA Metrics Dashboard',
@@ -131,5 +143,56 @@ Survey insights, stakeholder interviews, CI/CD telemetry, and security posture r
     benchmark: 'Elite performers deploy on-demand, with <1 day lead time, <15% failure rate, and <1 hour recovery time.',
   }
 
-  return [introSlide, synopsisSlide, doraSlide]
+  // BlueOptima Metrics Slide
+  const blueOptimaMetrics: DoraMetric[] = (data.frameworks.blueoptima.metrics as any[]).map((metric) => ({
+    id: metric.id,
+    name: metric.name,
+    category: metric.category,
+    definition: metric.definition,
+    current_value: metric.current_value,
+    current_value_display: metric.current_value_display,
+    benchmark_value: metric.benchmark_value,
+    performance_tier: metric.performance_tier,
+    gap_analysis: metric.gap_analysis,
+    telemetry: metric.telemetry,
+  }))
+
+  // Build insights from BlueOptima metrics
+  const blueOptimaInsights = blueOptimaMetrics.map(metric => {
+    const notes = (metric as any).notes || []
+    const notesText = notes.length > 0 ? `\n\nNotes:\n${notes.map((n: string) => `• ${n}`).join('\n')}` : ''
+    
+    // Add telemetry insights if available
+    const telemetryText = metric.telemetry 
+      ? `\n\n**Telemetry vs Survey:**\n` +
+        `Survey: ${(metric as any).current_value_display || metric.current_value} | ` +
+        `Actual: ${metric.telemetry.value_display || metric.telemetry.value} | ` +
+        `Variance: ${metric.telemetry.variance_from_survey > 0 ? '+' : ''}${metric.telemetry.variance_from_survey}%\n` +
+        `Source: ${metric.telemetry.source} (${metric.telemetry.measurement_period})\n` +
+        `${metric.telemetry.notes || ''}`
+      : ''
+    
+    return `**${metric.name}**\n` +
+           `Current: ${(metric as any).current_value_display || metric.current_value} | ` +
+           `Benchmark: ${metric.benchmark_value} | ` +
+           `Tier: ${metric.performance_tier}\n\n` +
+           `Gap Analysis: ${metric.gap_analysis}${notesText}${telemetryText}`
+  }).join('\n\n---\n\n')
+
+  const blueOptimaSlide: DualFrameworkSlide = {
+    id: 'blueoptima-metrics',
+    layout: 'dora-metrics',
+    title: 'BlueOptima Metrics Dashboard',
+    subtitle: 'Developer-level productivity and code quality metrics',
+    metrics: blueOptimaMetrics,
+    info: {
+      title: 'BlueOptima Metrics Insights',
+      body: 'BlueOptima metrics measure individual developer productivity, code quality, and collaboration patterns.',
+      utility: 'These metrics identify developer experience friction points and opportunities to improve team velocity.',
+      insights: blueOptimaInsights
+    },
+    benchmark: 'Elite teams commit every 1-2 days, merge PRs within 7 days, and maintain <5% code aberrancy.',
+  }
+
+  return [introSlide, synopsisSlide, doraSlide, blueOptimaSlide]
 }

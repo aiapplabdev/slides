@@ -42,6 +42,16 @@ export type SynopsisSlide = {
   benchmark?: string
 }
 
+export type TelemetryData = {
+  value: number
+  value_display?: string
+  source: string
+  measurement_period: string
+  confidence: string
+  variance_from_survey: number
+  notes?: string
+}
+
 export type DoraMetric = {
   id: string
   name: string
@@ -52,10 +62,11 @@ export type DoraMetric = {
   benchmark_value: number
   performance_tier: string
   gap_analysis: string
+  telemetry?: TelemetryData
 }
 
-export type DoraMetricsSlide = {
-  id: 'dora-metrics'
+export type DualFrameworkSlide = {
+  id: 'dora-metrics' | 'blueoptima-metrics'
   layout: 'dora-metrics'
   title: string
   subtitle?: string
@@ -64,4 +75,4 @@ export type DoraMetricsSlide = {
   benchmark?: string
 }
 
-export type Slide = BrandSlide | SynopsisSlide | DoraMetricsSlide
+export type Slide = BrandSlide | SynopsisSlide | DualFrameworkSlide

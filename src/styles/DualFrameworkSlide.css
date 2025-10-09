@@ -1,4 +1,4 @@
-.dora-metrics-slide {
+.dual-framework-slide {
   display: flex;
   flex-direction: column;
   gap: clamp(1rem, 2vw, 1.5rem);
@@ -204,10 +204,28 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: clamp(1.2rem, 2.5vw, 2rem);
+  gap: clamp(1.2rem, 2vw, 1.5rem);
   padding: clamp(0.5rem, 1vw, 0.8rem);
   overflow-y: auto;
-  justify-content: space-evenly;
+}
+
+/* BlueOptima specific layout - only when 3 categories */
+.overview-content:has(.category-group:nth-child(3)) {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto auto;
+}
+
+.overview-content:has(.category-group:nth-child(3)) .category-group:first-child {
+  grid-column: 1 / -1;
+}
+
+.overview-content:has(.category-group:nth-child(3)) .category-group:nth-child(2) {
+  grid-column: 1;
+}
+
+.overview-content:has(.category-group:nth-child(3)) .category-group:nth-child(3) {
+  grid-column: 2;
 }
 
 .comparison-matrix {
@@ -346,6 +364,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.whatif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: clamp(0.6rem, 1.2vw, 0.9rem);
 }
 
 .whatif-header h3 {
@@ -506,6 +531,93 @@
   font-size: clamp(0.8rem, 1.3vw, 0.95rem);
 }
 
+
+.telemetry-table {
+  font-size: clamp(0.65rem, 1vw, 0.75rem);
+}
+
+.telemetry-table th,
+.telemetry-table td {
+  padding: clamp(0.3rem, 0.6vw, 0.45rem) clamp(0.5rem, 1vw, 0.7rem);
+  line-height: 1.2;
+  vertical-align: middle;
+}
+
+.numeric-value {
+  font-size: clamp(0.6rem, 0.9vw, 0.7rem);
+  color: var(--color-muted);
+  margin-top: 0.1rem;
+}
+
+.telemetry-value {
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.variance-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: center;
+}
+
+.variance-badge {
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  border: 1px solid;
+  font-weight: 700;
+  font-size: clamp(0.65rem, 1vw, 0.75rem);
+}
+
+.alignment-text {
+  font-size: clamp(0.6rem, 0.9vw, 0.7rem);
+  font-weight: 600;
+}
+
+.source-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.source-name {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.source-period {
+  font-size: clamp(0.6rem, 0.9vw, 0.7rem);
+  color: var(--color-muted);
+}
+
+.telemetry-insights {
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(0.8rem, 1.5vw, 1.2rem);
+  background: var(--color-surface);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.telemetry-insights h4 {
+  margin: 0 0 0.8rem 0;
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.telemetry-insights ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.telemetry-insights li {
+  line-height: 1.5;
+  color: var(--color-text);
+}
 
 @media (max-width: 900px) {
   .metrics-summary-bottom {

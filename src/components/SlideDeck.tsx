@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useTheme } from '../hooks/useTheme'
 import { BrandSlide } from './BrandSlide'
 import { SynopsisSlide } from './SynopsisSlide'
-import { DoraMetricsSlide } from './DoraMetricsSlide'
+import { DualFrameworkSlide } from './DualFrameworkSlide'
 import { ChatSidebar } from './ChatSidebar'
 import type { Slide } from '../types/slide.types'
 
@@ -91,7 +91,7 @@ export function SlideDeck({ slides }: SlideDeckProps) {
                 ) : slide.layout === 'synopsis' ? (
                   <SynopsisSlide slide={slide} />
                 ) : slide.layout === 'dora-metrics' ? (
-                  <DoraMetricsSlide 
+                  <DualFrameworkSlide 
                     metrics={slide.metrics} 
                     title={slide.title} 
                     subtitle={slide.subtitle} 
