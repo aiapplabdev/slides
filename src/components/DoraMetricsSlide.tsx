@@ -16,22 +16,41 @@ type DoraMetric = {
 type DoraMetricsSlideProps = {
   metrics: DoraMetric[]
   title: string
-  subtitle?: string
 }
 
 type ChartView = 'overview' | 'comparison' | 'performance'
 
 export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideProps) {
+  const chartRef = useRef<HTMLDivElement>(null)
   const [activeView, setActiveView] = useState<ChartView>('overview')
-  const [whatIfMetrics, setWhatIfMetrics] = useState<Record<string, number>>(() => {
+  const [whatIfMetrics, setWhatIfMetrics] = useState<Record<string, number>>({})
+  const [currentTheme, setCurrentTheme] = useState<string>(document.body.dataset.theme || 'light')
+  const barChartRef = useRef<HTMLDivElement>(null)
+  const radarChartRef = useRef<HTMLDivElement>(null)
+
+  // Initialize whatIfMetrics with current values
+  useEffect(() => {
     const initial: Record<string, number> = {}
     metrics.forEach(m => {
       initial[m.id] = m.current_value
     })
-    return initial
-  })
-  const barChartRef = useRef<HTMLDivElement>(null)
-  const radarChartRef = useRef<HTMLDivElement>(null)
+    setWhatIfMetrics(initial)
+  }, [metrics])
+
+  // Listen for theme changes
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const newTheme = document.body.dataset.theme || 'light'
+      setCurrentTheme(newTheme)
+    })
+    
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    })
+    
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     // Skip chart initialization for overview
@@ -81,11 +100,8 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
     
     const hasWhatIfChanges = activeView === 'performance' && metrics.some(m => whatIfMetrics[m.id] !== m.current_value)
 
-    // Get current theme colors
-    const rootStyles = getComputedStyle(document.documentElement)
-    const textColor = rootStyles.getPropertyValue('--color-text').trim() || '#1f2937'
-    const surfaceColor = rootStyles.getPropertyValue('--color-surface').trim() || '#ffffff'
-    
+    // Get text color based on current theme
+    const textColor = currentTheme === 'dark' ? '#ffffff' : '#000000'
     // Bar Chart Configuration
     const barOption: EChartsOption = {
       title: {
@@ -115,7 +131,7 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
         data: ['Elite Benchmark', 'Current Performance'],
         bottom: 0,
         textStyle: {
-          color: 'var(--color-text)'
+          color: textColor
         }
       },
       grid: {
@@ -222,7 +238,6 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
           color: textColor,
           fontSize: 12,
           fontWeight: 800,
-          backgroundColor: surfaceColor,
           borderRadius: 4,
           padding: [4, 8],
           formatter: (value?: string) => {
@@ -240,7 +255,7 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
         },
         splitLine: {
           lineStyle: {
-            color: 'var(--color-border)',
+            color: textColor,
             width: 1
           }
         },
@@ -344,7 +359,7 @@ export function DoraMetricsSlide({ metrics, title, subtitle }: DoraMetricsSlideP
         chart.dispose()
       }
     }
-  }, [metrics, activeView, whatIfMetrics])
+  }, [metrics, activeView, whatIfMetrics, currentTheme])
 
   // Get velocity and stability metrics
   const velocityMetrics = metrics.filter(m => m.category === 'Velocity')
