@@ -153,7 +153,7 @@
   flex-direction: column;
   gap: clamp(0.6rem, 1.2vw, 0.9rem);
   min-height: 0;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .chart-header {
@@ -404,6 +404,7 @@
   flex-direction: column;
   gap: clamp(0.5rem, 1vw, 0.7rem);
   flex: 1;
+  overflow: hidden;
 }
 
 .whatif-control-compact {

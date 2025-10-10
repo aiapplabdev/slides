@@ -424,9 +424,9 @@ export function DualFrameworkSlide({ metrics, title, subtitle }: DualFrameworkSl
     const lowerIsBetter = ['change_failure_rate', 'time_to_restore_service', 'lead_time_for_changes'].includes(metricId)
     
     if (lowerIsBetter) {
-      return Math.max(0, Math.min(100, (benchmarkValue / value) * 100))
+      return Math.max(0, (benchmarkValue / value) * 100)
     } else {
-      return Math.max(0, Math.min(100, (value / benchmarkValue) * 100))
+      return Math.max(0, (value / benchmarkValue) * 100)
     }
   }
 
@@ -654,6 +654,14 @@ export function DualFrameworkSlide({ metrics, title, subtitle }: DualFrameworkSl
                     const performance = calculatePerformance(metric.id, currentValue, metric.benchmark_value)
                     const isImproved = currentValue !== metric.current_value
                     
+                    // Configure slider based on metric type
+                    const lowerIsBetter = ['change_failure_rate', 'time_to_restore_service', 'lead_time_for_changes', 
+                                          'cycle_time', 'intra_pr_activity', 'commit_frequency', 'pr_frequency'].includes(metric.id)
+                    
+                    const sliderMin = lowerIsBetter ? metric.benchmark_value : 0
+                    const sliderMax = lowerIsBetter ? Math.max(metric.current_value * 1.5, metric.benchmark_value * 3) : metric.benchmark_value
+                    const sliderStep = (sliderMax - sliderMin) / 100
+                    
                     return (
                       <div key={metric.id} className="whatif-control-compact">
                         <div className="control-row">
@@ -669,9 +677,9 @@ export function DualFrameworkSlide({ metrics, title, subtitle }: DualFrameworkSl
                         </div>
                         <input
                           type="range"
-                          min={Math.min(metric.benchmark_value * 0.5, metric.current_value * 0.5)}
-                          max={Math.max(metric.benchmark_value * 1.5, metric.current_value * 1.5)}
-                          step={0.1}
+                          min={sliderMin}
+                          max={sliderMax}
+                          step={sliderStep}
                           value={currentValue}
                           onChange={(e) => handleSliderChange(metric.id, parseFloat(e.target.value))}
                           className="whatif-slider-compact"
