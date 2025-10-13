@@ -75,4 +75,28 @@ export type DualFrameworkSlide = {
   benchmark?: string
 }
 
-export type Slide = BrandSlide | SynopsisSlide | DualFrameworkSlide
+export type SpaceDimension = {
+  id: string
+  name: string
+  definition: string
+  survey_question: string
+  scale: string
+  current_score: number
+  target_score: number
+  industry_target: string
+  supporting_signals: string[]
+}
+
+export type SpaceFrameworkSlide = {
+  id: 'space-framework'
+  layout: 'space-framework'
+  title: string
+  subtitle?: string
+  dimensions: SpaceDimension[]
+  overall_score: number
+  overall_target: number
+  info: InfoBlock
+  benchmark?: string
+}
+
+export type Slide = BrandSlide | SynopsisSlide | DualFrameworkSlide | SpaceFrameworkSlide

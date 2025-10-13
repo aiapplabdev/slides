@@ -6,6 +6,7 @@ import { useTheme } from '../hooks/useTheme'
 import { BrandSlide } from './BrandSlide'
 import { SynopsisSlide } from './SynopsisSlide'
 import { DualFrameworkSlide } from './DualFrameworkSlide'
+import { SpaceFrameworkSlide } from './SpaceFrameworkSlide'
 import { ChatSidebar } from './ChatSidebar'
 import type { Slide } from '../types/slide.types'
 
@@ -91,11 +92,13 @@ export function SlideDeck({ slides }: SlideDeckProps) {
                 ) : slide.layout === 'synopsis' ? (
                   <SynopsisSlide slide={slide} />
                 ) : slide.layout === 'dora-metrics' ? (
-                  <DualFrameworkSlide 
-                    metrics={slide.metrics} 
-                    title={slide.title} 
-                    subtitle={slide.subtitle} 
+                  <DualFrameworkSlide
+                    metrics={slide.metrics}
+                    title={slide.title}
+                    subtitle={slide.subtitle}
                   />
+                ) : slide.layout === 'space-framework' ? (
+                  <SpaceFrameworkSlide slide={slide} />
                 ) : null}
               </div>
               <button
