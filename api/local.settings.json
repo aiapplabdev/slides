@@ -5,7 +5,7 @@
     "AzureWebJobsStorage": "",
     "AZURE_OPENAI_ENDPOINT": "https://magtech-internal-openai-001-aueast.openai.azure.com",
     "AZURE_OPENAI_API_VERSION": "2025-04-01-preview",
-    "AZURE_OPENAI_CHAT_DEPLOYMENT": "gpt-5-mini",
+    "AZURE_OPENAI_CHAT_DEPLOYMENT": "gpt-4.1",
     "AZURE_OPENAI_EMBEDDING_DEPLOYMENT": "text-embedding-3-small"
   }
 }

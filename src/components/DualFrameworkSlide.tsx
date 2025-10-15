@@ -25,6 +25,16 @@ type DoraMetric = {
   telemetry?: TelemetryData
 }
 
+const lowerIsBetterMetricIds = new Set([
+  'change_failure_rate',
+  'time_to_restore_service',
+  'lead_time_for_changes',
+  'cycle_time',
+  'intra_pr_activity',
+  'commit_frequency',
+  'pr_frequency',
+])
+
 type DualFrameworkSlideProps = {
   metrics: DoraMetric[]
   title: string
@@ -420,15 +430,38 @@ export function DualFrameworkSlide({ metrics, title, subtitle }: DualFrameworkSl
   }))
 
   // Calculate what-if performance
+  const isLowerBetter = (metricId: string) => lowerIsBetterMetricIds.has(metricId)
+
   const calculatePerformance = (metricId: string, value: number, benchmarkValue: number) => {
-    const lowerIsBetter = ['change_failure_rate', 'time_to_restore_service', 'lead_time_for_changes'].includes(metricId)
-    
-    if (lowerIsBetter) {
-      return Math.max(0, (benchmarkValue / value) * 100)
-    } else {
-      return Math.max(0, (value / benchmarkValue) * 100)
+    if (!benchmarkValue) return 0
+
+    if (isLowerBetter(metricId)) {
+      if (value <= 0) return 100
+      return Math.min(100, Math.max(0, (benchmarkValue / value) * 100))
     }
+
+    return Math.min(100, Math.max(0, (value / benchmarkValue) * 100))
   }
+
+  const convertPercentToValue = (metricId: string, percent: number, benchmarkValue: number, fallback: number) => {
+    const normalized = Math.max(0, Math.min(100, percent))
+
+    if (!benchmarkValue) {
+      return normalized <= 0 ? fallback : fallback * (normalized / 100)
+    }
+
+    if (isLowerBetter(metricId)) {
+      if (normalized <= 0) {
+        return benchmarkValue * 4
+      }
+      return benchmarkValue / (normalized / 100)
+    }
+
+    return (benchmarkValue * normalized) / 100
+  }
+
+  const getPerformancePercent = (metricId: string, value: number, benchmarkValue: number) =>
+    calculatePerformance(metricId, value, benchmarkValue)
 
   // Get unit for metric
   const getMetricUnit = (metricId: string) => {
@@ -442,8 +475,9 @@ export function DualFrameworkSlide({ metrics, title, subtitle }: DualFrameworkSl
     return unitMap[metricId] || ''
   }
 
-  const handleSliderChange = (metricId: string, value: number) => {
-    setWhatIfMetrics(prev => ({ ...prev, [metricId]: value }))
+  const handleSliderChange = (metric: DoraMetric, percent: number) => {
+    const newValue = convertPercentToValue(metric.id, percent, metric.benchmark_value, metric.current_value)
+    setWhatIfMetrics(prev => ({ ...prev, [metric.id]: newValue }))
   }
 
   const resetWhatIf = () => {
@@ -651,16 +685,11 @@ export function DualFrameworkSlide({ metrics, title, subtitle }: DualFrameworkSl
                 <div className="whatif-controls-compact">
                   {metrics.map((metric) => {
                     const currentValue = whatIfMetrics[metric.id]
-                    const performance = calculatePerformance(metric.id, currentValue, metric.benchmark_value)
+                    const performance = getPerformancePercent(metric.id, currentValue, metric.benchmark_value)
                     const isImproved = currentValue !== metric.current_value
-                    
-                    // Configure slider based on metric type
-                    const lowerIsBetter = ['change_failure_rate', 'time_to_restore_service', 'lead_time_for_changes', 
-                                          'cycle_time', 'intra_pr_activity', 'commit_frequency', 'pr_frequency'].includes(metric.id)
-                    
-                    const sliderMin = lowerIsBetter ? metric.benchmark_value : 0
-                    const sliderMax = lowerIsBetter ? Math.max(metric.current_value * 1.5, metric.benchmark_value * 3) : metric.benchmark_value
-                    const sliderStep = (sliderMax - sliderMin) / 100
+                    const sliderMin = 0
+                    const sliderMax = 100
+                    const sliderStep = 1
                     
                     return (
                       <div key={metric.id} className="whatif-control-compact">
@@ -680,8 +709,8 @@ export function DualFrameworkSlide({ metrics, title, subtitle }: DualFrameworkSl
                           min={sliderMin}
                           max={sliderMax}
                           step={sliderStep}
-                          value={currentValue}
-                          onChange={(e) => handleSliderChange(metric.id, parseFloat(e.target.value))}
+                          value={performance}
+                          onChange={(e) => handleSliderChange(metric, Number(e.target.value))}
                           className="whatif-slider-compact"
                         />
                       </div>
