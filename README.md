@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# Mag Tech Slides – Azure OpenAI Assistant
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project renders Mag Tech’s engineering transformation slides with an AI assistant that surfaces benchmarks and SPACE/DORA insights. The assistant now proxies requests through an Azure Static Web Apps function to keep Azure OpenAI credentials server-side.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node.js 18+
+- Azure subscription with Azure OpenAI deployments (chat + embeddings)
+- Azure CLI logged in if you plan to use managed identity
 
-## React Compiler
+## Project Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `src/` – Vite + React slide deck and chat UI
+- `src/services/knowledgeBase.ts` – builds RAG context from `engineering_metrics_benchmark_template.json`
+- `api/` – Azure Functions backend exposed through Static Web Apps
+- `api/azure-openai/index.js` – HTTP trigger calling Azure OpenAI using the official `@azure/openai` SDK
 
-## Expanding the ESLint configuration
+## Environment Configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Populate `api/local.settings.json` for local development (values are examples):
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```json
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AzureWebJobsStorage": "",
+    "AZURE_OPENAI_ENDPOINT": "https://your-resource.openai.azure.com",
+    "AZURE_OPENAI_API_VERSION": "2023-05-15",
+    "AZURE_OPENAI_CHAT_DEPLOYMENT": "gpt-4o-mini",
+    "AZURE_OPENAI_EMBEDDING_DEPLOYMENT": "text-embedding-3-large",
+    "AZURE_OPENAI_KEY": "<optional-key-if-not-using-identity>"
+  }
+}
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+For production, define equivalent app settings in Azure Static Web Apps (or the linked Function App).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Install Dependencies
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install         # root project
+cd api && npm install
 ```
+
+## Local Development
+
+1. Start Vite:
+
+   ```bash
+   npm run dev
+   ```
+
+2. In another terminal, run the Static Web Apps CLI proxying the function:
+
+   ```bash
+   npm run dev:swa
+   ```
+
+   The CLI serves the combined app (default `http://localhost:4280`). The SPA calls `/api/azure-openai`, which the CLI forwards to the Azure Function.
+
+## Deployment
+
+- **Azure Static Web Apps**: Run `az staticwebapp up` or configure the provided workflow to build the Vite app and deploy the `api/` functions.
+- Ensure production secrets (`AZURE_OPENAI_*`) are configured in the Static Web Apps portal. For managed identity, grant the SWA Function App access to the Azure OpenAI resource.
+
+## Troubleshooting
+
+- 500 errors from `/api/azure-openai` usually indicate missing env vars or Denied access to Azure OpenAI. Check Function logs via `swa start` output or Azure portal.
+- Hot reload errors mentioning “Extension context invalidated” come from browser extensions and can be ignored or mitigated by disabling the extension during dev.
+
+## Testing the Chat
+
+With both dev servers running, open the app and ask questions such as “What are the biggest SPACE gaps?”. The assistant streams responses grounded in the slide JSON and cites relevant sections.

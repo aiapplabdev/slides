@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from 'react'
-import { Send, MessageSquare, Info, Sparkles, Moon, Sun } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Info, MessageSquare, Moon, Send, Sparkles, Sun } from 'lucide-react'
 import type { Slide } from '../types/slide.types'
+import { type AssistantHistoryMessage, getAssistantAnswer } from '../services/ragAssistant'
 
 type Message = {
   id: string
@@ -24,6 +25,8 @@ type ChatSidebarProps = {
 export function ChatSidebar({ currentSlide, triggerInfo, theme, onToggleTheme, isOpen }: ChatSidebarProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState('')
+  const [assistantHistory, setAssistantHistory] = useState<AssistantHistoryMessage[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const typingIntervalRef = useRef<number | null>(null)
 
@@ -34,6 +37,12 @@ export function ChatSidebar({ currentSlide, triggerInfo, theme, onToggleTheme, i
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  useEffect(() => {
+    setMessages([])
+    setAssistantHistory([])
+    setInputValue('')
+  }, [currentSlide.id])
 
   // Trigger typing animation when info button is clicked
   useEffect(() => {
@@ -109,13 +118,7 @@ export function ChatSidebar({ currentSlide, triggerInfo, theme, onToggleTheme, i
     }, typingSpeed)
   }
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) return
-
-    const userText = inputValue
-    setInputValue('')
-
-    // Add user message instantly
+  const appendUserMessage = (userText: string) => {
     const userMessage: Message = {
       id: `user-${Date.now()}`,
       type: 'user',
@@ -125,36 +128,53 @@ export function ChatSidebar({ currentSlide, triggerInfo, theme, onToggleTheme, i
       isComplete: true,
     }
     setMessages((prev) => [...prev, userMessage])
-
-    // Generate and type AI response
-    setTimeout(() => {
-      const responseText = generateAIResponse(userText, currentSlide)
-      typeMessage(responseText, 'assistant')
-    }, 500)
   }
 
-  const generateAIResponse = (query: string, slide: Slide): string => {
-    const lowerQuery = query.toLowerCase()
-    
-    if (lowerQuery.includes('benchmark') || lowerQuery.includes('metric')) {
-      return `For this ${slide.layout} slide, the key benchmarks are:\n\n${slide.benchmark}\n\nWould you like more details on any specific metric?`
+  const handleUserQuery = async (userText: string) => {
+    appendUserMessage(userText)
+
+    const historyWindow = assistantHistory.slice(-8)
+    setIsLoading(true)
+
+    try {
+      const { answer, citations } = await getAssistantAnswer(userText, currentSlide, historyWindow)
+      const citationSection = citations.length > 0
+        ? `\n\n### Sources\n${citations.map((chunk) => `• ${chunk.title}`).join('\n')}`
+        : ''
+      const formattedAnswer = `${answer.trim()}${citationSection}`.trim()
+
+      const updatedHistory: AssistantHistoryMessage[] = [
+        ...historyWindow,
+        { role: 'user', content: userText } as const,
+        { role: 'assistant', content: formattedAnswer } as const,
+      ]
+
+      setAssistantHistory(updatedHistory.slice(-12))
+      typeMessage(formattedAnswer, 'assistant')
+    } catch (error) {
+      console.error('Assistant response error', error)
+      typeMessage(
+        'I encountered an issue retrieving insights from Azure OpenAI. Please verify the configuration and try again.',
+        'assistant',
+      )
+    } finally {
+      setIsLoading(false)
     }
-    
-    if (lowerQuery.includes('explain') || lowerQuery.includes('what')) {
-      return slide.info.body
-    }
-    
-    if (lowerQuery.includes('why') || lowerQuery.includes('matter')) {
-      return slide.info.utility || 'This provides context for the transformation roadmap.'
-    }
-    
-    return `I can help you understand this slide better. Try asking about:\n- Benchmarks and metrics\n- Why this information matters\n- Specific details about the content`
+  }
+
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return
+
+    const userText = inputValue.trim()
+    setInputValue('')
+
+    await handleUserQuery(userText)
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      handleSendMessage()
+      void handleSendMessage()
     }
   }
 
@@ -164,6 +184,7 @@ export function ChatSidebar({ currentSlide, triggerInfo, theme, onToggleTheme, i
   ]
 
   const handlePromptClick = (promptType: ChatTab) => {
+    if (isLoading) return
     let promptText = ''
     
     if (promptType === 'slide-info') {
@@ -201,6 +222,15 @@ export function ChatSidebar({ currentSlide, triggerInfo, theme, onToggleTheme, i
       }
       
       typeMessage(responseText, 'assistant')
+      setAssistantHistory((prev) => {
+        const base = prev.slice(-10)
+        const updated = [
+          ...base,
+          { role: 'user', content: promptText } as const,
+          { role: 'assistant', content: responseText } as const,
+        ]
+        return updated.slice(-12)
+      })
     }, 500)
     
     // Clear input after sending
@@ -264,6 +294,13 @@ export function ChatSidebar({ currentSlide, triggerInfo, theme, onToggleTheme, i
             </div>
           </div>
         ))}
+        {isLoading && (
+          <div className="chat-message system">
+            <div className="message-content">
+              <p>Analyzing slide context…</p>
+            </div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -303,7 +340,7 @@ export function ChatSidebar({ currentSlide, triggerInfo, theme, onToggleTheme, i
         <button
           className="chat-send"
           onClick={handleSendMessage}
-          disabled={!inputValue.trim()}
+          disabled={!inputValue.trim() || isLoading}
           aria-label="Send message"
         >
           <Send size={18} />

@@ -1,0 +1,11 @@
+{
+  "name": "swa-functions",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@azure/identity": "^4.13.0",
+    "openai": "^4.58.1"
+  }
+}

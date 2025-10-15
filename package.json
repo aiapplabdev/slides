@@ -5,20 +5,26 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:swa": "swa start http://localhost:5173 --api-location api",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@azure/core-auth": "^1.10.1",
+    "@azure/identity": "^4.13.0",
+    "@azure/openai": "^2.0.0",
     "@use-gesture/react": "^10.3.1",
     "clsx": "^2.1.1",
     "echarts": "^6.0.0",
     "framer-motion": "^12.23.22",
     "lucide-react": "^0.545.0",
+    "openai": "^6.3.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
+    "@azure/static-web-apps-cli": "^2.0.7",
     "@eslint/js": "^9.36.0",
     "@types/node": "^24.6.0",
     "@types/react": "^19.1.16",
