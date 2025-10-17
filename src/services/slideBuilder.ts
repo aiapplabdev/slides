@@ -6,6 +6,8 @@ import type {
   SynopsisSlide,
   DualFrameworkSlide,
   SpaceFrameworkSlide,
+  SecurityPostureSlide,
+  SammAssessment,
   MetaDetail,
   DoraMetric,
   SpaceDimension,
@@ -150,57 +152,6 @@ Survey insights, stakeholder interviews, CI/CD telemetry, and security posture r
       insights: doraInsights
     },
     benchmark: 'Elite performers deploy on-demand, with <1 day lead time, <15% failure rate, and <1 hour recovery time.',
-  }
-
-  // BlueOptima Metrics Slide
-  const blueOptimaMetrics: DoraMetric[] = (data.frameworks.blueoptima.metrics as any[]).map((metric) => ({
-    id: metric.id,
-    name: metric.name,
-    category: metric.category,
-    definition: metric.definition,
-    current_value: metric.current_value,
-    current_value_display: metric.current_value_display,
-    benchmark_value: metric.benchmark_value,
-    performance_tier: metric.performance_tier,
-    gap_analysis: metric.gap_analysis,
-    telemetry: metric.telemetry,
-  }))
-
-  // Build insights from BlueOptima metrics
-  const blueOptimaInsights = blueOptimaMetrics.map(metric => {
-    const notes = (metric as any).notes || []
-    const notesText = notes.length > 0 ? `\n\nNotes:\n${notes.map((n: string) => `• ${n}`).join('\n')}` : ''
-    
-    // Add telemetry insights if available
-    const telemetryText = metric.telemetry 
-      ? `\n\n**Telemetry vs Survey:**\n` +
-        `Survey: ${(metric as any).current_value_display || metric.current_value} | ` +
-        `Actual: ${metric.telemetry.value_display || metric.telemetry.value} | ` +
-        `Variance: ${metric.telemetry.variance_from_survey > 0 ? '+' : ''}${metric.telemetry.variance_from_survey}%\n` +
-        `Source: ${metric.telemetry.source} (${metric.telemetry.measurement_period})\n` +
-        `${metric.telemetry.notes || ''}`
-      : ''
-    
-    return `**${metric.name}**\n` +
-           `Current: ${(metric as any).current_value_display || metric.current_value} | ` +
-           `Benchmark: ${metric.benchmark_value} | ` +
-           `Tier: ${metric.performance_tier}\n\n` +
-           `Gap Analysis: ${metric.gap_analysis}${notesText}${telemetryText}`
-  }).join('\n\n---\n\n')
-
-  const blueOptimaSlide: DualFrameworkSlide = {
-    id: 'blueoptima-metrics',
-    layout: 'dora-metrics',
-    title: 'BlueOptima Metrics Dashboard',
-    subtitle: 'Developer-level productivity and code quality metrics',
-    metrics: blueOptimaMetrics,
-    info: {
-      title: 'BlueOptima Metrics Insights',
-      body: 'BlueOptima metrics measure individual developer productivity, code quality, and collaboration patterns.',
-      utility: 'These metrics identify developer experience friction points and opportunities to improve team velocity.',
-      insights: blueOptimaInsights
-    },
-    benchmark: 'Elite teams commit every 1-2 days, merge PRs within 7 days, and maintain <5% code aberrancy.',
   }
 
   const rawSpaceDimensions: SpaceDimension[] = (Array.isArray(data.frameworks?.space?.dimensions)
@@ -352,5 +303,70 @@ Survey insights, stakeholder interviews, CI/CD telemetry, and security posture r
     benchmark: 'Elite engineering organizations sustain SPACE scores of 4.5+ across all dimensions with minimal variance.',
   }
 
-  return [introSlide, synopsisSlide, doraSlide, blueOptimaSlide, spaceSlide]
+  const sammAssessments: SammAssessment[] = Array.isArray(data.frameworks?.security_posture?.assessments)
+    ? data.frameworks.security_posture.assessments.map((assessment: any) => ({
+        id: assessment.id,
+        practice: assessment.practice,
+        maturity_score: Number(assessment.maturity_score) || 0,
+        insights: Array.isArray(assessment.insights)
+          ? assessment.insights.map((item: unknown) => item?.toString().trim()).filter(Boolean) as string[]
+          : [],
+        proof: Array.isArray(assessment.proof)
+          ? assessment.proof.map((item: unknown) => item?.toString().trim()).filter(Boolean) as string[]
+          : [],
+        recommendations: Array.isArray(assessment.recommendations)
+          ? assessment.recommendations.map((item: unknown) => item?.toString().trim()).filter(Boolean) as string[]
+          : [],
+      }))
+    : []
+
+  const sammSorted = sammAssessments.slice().sort((a, b) => b.maturity_score - a.maturity_score)
+  const sammTopInsights = sammSorted.slice(0, 3).map((practice, index) => {
+    const proof = practice.proof[0] ? `Proof: ${practice.proof[0]}` : null
+    const recommendation = practice.recommendations[0] ? `Next: ${practice.recommendations[0]}` : null
+    return [`${index + 1}. ${practice.practice}`, `Maturity ${practice.maturity_score.toFixed(1)} – ${practice.insights[0] || 'Maintain controls.'}`, proof, recommendation]
+      .filter(Boolean)
+      .join('\n')
+  })
+  const sammFocusInsights = sammSorted
+    .slice(-3)
+    .reverse()
+    .map((practice, index) => {
+      const proof = practice.proof[0] ? `Proof: ${practice.proof[0]}` : null
+      const recommendation = practice.recommendations[0] ? `Next: ${practice.recommendations[0]}` : null
+      return [`${index + 1}. ${practice.practice}`, `Maturity ${practice.maturity_score.toFixed(1)} – ${practice.insights[0] || 'Gap to close.'}`, proof, recommendation]
+        .filter(Boolean)
+        .join('\n')
+    })
+  const sammDescription = toTrimmedString(data.frameworks?.security_posture?.description)
+
+  const sammInfo = {
+    title: 'What this slide shows',
+    body: 'Benchmarks OWASP SAMM practices across governance, design, implementation, verification, and operations.',
+    utility: 'Highlights maturity hotspots and prioritises the next security investments.',
+    insights: ['**Top Controls**', ...sammTopInsights, '', '**Focus Gaps**', ...sammFocusInsights]
+      .filter((entry) => toTrimmedString(entry))
+      .join('\n\n---\n\n'),
+  }
+
+  const sammSlide: SecurityPostureSlide | null = sammAssessments.length
+    ? {
+        id: 'samm-security',
+        layout: 'samm-security',
+        title: 'OWASP SAMM Security Posture',
+        subtitle: 'Maturity across strategy, design, implementation, verification, and operations',
+        description: sammDescription,
+        assessments: sammAssessments,
+        info: sammInfo,
+        benchmark: 'Elite organisations sustain SAMM maturity ≥2.0 across all practices with continuous improvement cadences.',
+      }
+    : null
+
+  const slides: Slide[] = [introSlide, synopsisSlide, doraSlide, spaceSlide]
+
+  if (sammSlide) {
+    slides.push(sammSlide)
+  }
+
+  return slides
 }

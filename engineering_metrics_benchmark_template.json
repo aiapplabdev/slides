@@ -386,40 +386,259 @@
             "description": "Security and compliance readiness",
             "assessments": [
                 {
-                    "id": "sdlc_security_integration",
-                    "question": "Are automated security scanning tools (SAST, DAST, SCA) integrated into the CI/CD pipeline?",
-                    "scale": "Qualitative",
-                    "current_assessment": "Minimal - Ad-hoc manual security reviews only",
-                    "industry_benchmark": "Fully automated shift-left security",
-                    "evidence": ["No SAST/DAST tools in pipeline", "Security reviews conducted manually post-development", "Dependency scanning not automated"],
-                    "risks": ["Vulnerabilities discovered late in SDLC", "Increased remediation costs", "Compliance exposure"]
+                    "id": "strategy_metrics",
+                    "practice": "Strategy & Metrics",
+                    "maturity_score": 1.0,
+                    "insights": [
+                        "Security goals defined but not tied to product outcomes",
+                        "KPI reporting ad-hoc with quarterly updates"
+                    ],
+                    "proof": [
+                        "2024 security strategy deck lacks measurable KPIs",
+                        "Risk register updated once per quarter"
+                    ],
+                    "recommendations": [
+                        "Introduce OKRs linking security posture improvements to business impact",
+                        "Automate monthly scorecard using GRC tooling"
+                    ]
                 },
                 {
-                    "id": "data_governance",
-                    "question": "Does the organization have a clearly defined data governance policy?",
-                    "scale": "Qualitative",
-                    "current_assessment": "Partial - Basic policies exist but not consistently enforced",
-                    "industry_benchmark": "Comprehensive audited policies",
-                    "evidence": ["Data classification guidelines exist", "No formal data retention policies", "Limited audit trails"],
-                    "risks": ["Regulatory compliance gaps", "Data breach exposure", "Inconsistent data handling practices"]
+                    "id": "policy_compliance",
+                    "practice": "Policy & Compliance",
+                    "maturity_score": 1.5,
+                    "insights": [
+                        "Policies documented but enforcement inconsistent per team",
+                        "Compliance attestations manual and spreadsheet based"
+                    ],
+                    "proof": [
+                        "Last ISO 27001 internal audit flagged missing evidence",
+                        "Policy portal shows several unsigned acknowledgements"
+                    ],
+                    "recommendations": [
+                        "Centralise policy lifecycle in a governed repository",
+                        "Automate attestation reminders and evidence capture"
+                    ]
                 },
                 {
-                    "id": "cloud_architecture_security",
-                    "question": "Are regular security reviews of cloud infrastructure and architecture conducted?",
-                    "scale": "Qualitative",
-                    "current_assessment": "Reactive - Reviews conducted only after incidents or major changes",
-                    "industry_benchmark": "Regular automated reviews",
-                    "evidence": ["No scheduled security architecture reviews", "Cloud security posture management not implemented", "Manual configuration audits quarterly"],
-                    "risks": ["Misconfigured cloud resources", "Privilege escalation vulnerabilities", "Compliance drift"]
+                    "id": "education_guidance",
+                    "practice": "Education & Guidance",
+                    "maturity_score": 0.5,
+                    "insights": [
+                        "Security onboarding optional for contractors",
+                        "No role-specific secure coding guidance"
+                    ],
+                    "proof": [
+                        "LMS completion report shows 42% developer participation",
+                        "Guild slack channel lacks curated guidance"
+                    ],
+                    "recommendations": [
+                        "Mandate annual secure coding training with labs",
+                        "Publish role-based playbooks aligned to OWASP cheatsheets"
+                    ]
                 },
                 {
-                    "id": "incident_response",
-                    "question": "Is there a formal incident response plan that is regularly tested?",
-                    "scale": "Qualitative",
-                    "current_assessment": "Basic - Plan exists but not regularly tested or updated",
-                    "industry_benchmark": "Formal, tested, updated plan",
-                    "evidence": ["Incident response playbook created 18 months ago", "No tabletop exercises conducted", "Response roles not clearly defined"],
-                    "risks": ["Slow incident response times", "Unclear escalation paths", "Potential for extended outages"]
+                    "id": "threat_assessment",
+                    "practice": "Threat Assessment",
+                    "maturity_score": 0.8,
+                    "insights": [
+                        "STRIDE used during new feature intake only",
+                        "No formal threat library maintained"
+                    ],
+                    "proof": [
+                        "Product discovery templates lack threat checklist",
+                        "Red team backlog empty for past two quarters"
+                    ],
+                    "recommendations": [
+                        "Create reusable threat model patterns per domain",
+                        "Schedule quarterly adversary simulation workshops"
+                    ]
+                },
+                {
+                    "id": "security_requirements",
+                    "practice": "Security Requirements",
+                    "maturity_score": 1.2,
+                    "insights": [
+                        "Non-functional requirements captured but not versioned",
+                        "Security acceptance criteria missing from 60% of stories"
+                    ],
+                    "proof": [
+                        "Jira report shows only 18% stories tagged SEC",
+                        "API design docs do not include security checklist"
+                    ],
+                    "recommendations": [
+                        "Adopt security user stories with clear pass/fail criteria",
+                        "Embed auto-generated NFR templates in product backlog tooling"
+                    ]
+                },
+                {
+                    "id": "security_architecture",
+                    "practice": "Security Architecture",
+                    "maturity_score": 1.0,
+                    "insights": [
+                        "Reference architectures maintained but outdated",
+                        "Architectural decisions rarely capture security trade-offs"
+                    ],
+                    "proof": [
+                        "ADR repository missing entries for 2024 projects",
+                        "Zero-trust roadmap draft not approved"
+                    ],
+                    "recommendations": [
+                        "Refresh reference designs with security guardrails",
+                        "Institute architecture review board with security veto rights"
+                    ]
+                },
+                {
+                    "id": "secure_build",
+                    "practice": "Secure Build",
+                    "maturity_score": 0.7,
+                    "insights": [
+                        "CI pipelines run SCA but results ignored",
+                        "Build agents lack hardened baseline"
+                    ],
+                    "proof": [
+                        "SCA dashboard shows 157 unresolved vulns >30 days",
+                        "Build images still run as root"
+                    ],
+                    "recommendations": [
+                        "Fail builds on critical dependency findings",
+                        "Adopt signed base images with CIS hardening"
+                    ]
+                },
+                {
+                    "id": "secure_deployment",
+                    "practice": "Secure Deployment",
+                    "maturity_score": 1.3,
+                    "insights": [
+                        "CD promotes artifacts through manual approvals",
+                        "Runtime secrets rotated quarterly but not on compromise"
+                    ],
+                    "proof": [
+                        "Argo rollout logs show manual change board gates",
+                        "Vault audit trail shows static tokens > 90 days"
+                    ],
+                    "recommendations": [
+                        "Adopt policy-as-code for deployment gating",
+                        "Enable just-in-time secrets with dynamic rotation"
+                    ]
+                },
+                {
+                    "id": "defect_management",
+                    "practice": "Defect Management",
+                    "maturity_score": 1.1,
+                    "insights": [
+                        "Vulnerability backlog triaged monthly",
+                        "Mean time to remediate medium findings 65 days"
+                    ],
+                    "proof": [
+                        "ServiceNow queue shows 43 open findings",
+                        "Patch SLA dashboard breached for 7 systems"
+                    ],
+                    "recommendations": [
+                        "Introduce risk-based SLAs aligned to CVSS",
+                        "Automate remediation workflows with ticket synchronisation"
+                    ]
+                },
+                {
+                    "id": "architecture_assessment",
+                    "practice": "Architecture Assessment",
+                    "maturity_score": 0.9,
+                    "insights": [
+                        "Security review occurs post-design freeze",
+                        "Findings tracked but lack follow-up validation"
+                    ],
+                    "proof": [
+                        "Architecture review board minutes show security optional",
+                        "Follow-up checklist not completed for 3 recent launches"
+                    ],
+                    "recommendations": [
+                        "Shift security gates to pre-design approval stage",
+                        "Add validation step confirming remediation before go-live"
+                    ]
+                },
+                {
+                    "id": "requirements_testing",
+                    "practice": "Requirements Testing",
+                    "maturity_score": 1.4,
+                    "insights": [
+                        "BDD scenarios rarely include abuse cases",
+                        "QA team lacks tooling for security regression"
+                    ],
+                    "proof": [
+                        "Gherkin library contains only 2 security scenarios",
+                        "QA automation suite missing negative tests"
+                    ],
+                    "recommendations": [
+                        "Introduce misuse stories into acceptance criteria",
+                        "Provision DAST tools for QA pipelines"
+                    ]
+                },
+                {
+                    "id": "security_testing",
+                    "practice": "Security Testing",
+                    "maturity_score": 1.0,
+                    "insights": [
+                        "Pen tests annual, no continuous assurance",
+                        "Bug bounty limited to responsive scope"
+                    ],
+                    "proof": [
+                        "2023 pen test report shows repeat findings",
+                        "Bug bounty platform indicates low engagement"
+                    ],
+                    "recommendations": [
+                        "Adopt continuous scanning with prioritized alerting",
+                        "Expand bug bounty scope and triage cadence"
+                    ]
+                },
+                {
+                    "id": "incident_management",
+                    "practice": "Incident Management",
+                    "maturity_score": 1.2,
+                    "insights": [
+                        "IR plan exists but lacks severity playbooks",
+                        "Post-incident reviews inconsistent across teams"
+                    ],
+                    "proof": [
+                        "Only sev-one template available in Confluence",
+                        "Last three PIRs missing action owners"
+                    ],
+                    "recommendations": [
+                        "Develop role-specific runbooks with communication matrix",
+                        "Standardise PIR template with automated action tracking"
+                    ]
+                },
+                {
+                    "id": "environment_management",
+                    "practice": "Environment Management",
+                    "maturity_score": 0.6,
+                    "insights": [
+                        "Lower environments share production credentials",
+                        "Asset inventory incomplete for ephemeral workloads"
+                    ],
+                    "proof": [
+                        "Terraform state shows reused secrets across envs",
+                        "CMDB missing container cluster entries"
+                    ],
+                    "recommendations": [
+                        "Isolate environment secrets with scoped policies",
+                        "Adopt automated discovery for ephemeral assets"
+                    ]
+                },
+                {
+                    "id": "operational_management",
+                    "practice": "Operational Management",
+                    "maturity_score": 1.3,
+                    "insights": [
+                        "Continuous monitoring configured but alert fatigue high",
+                        "Change management bypassed for emergency fixes"
+                    ],
+                    "proof": [
+                        "SOC metrics show 18% alert acknowledgement within SLA",
+                        "Change control board logs indicate 12 emergency changes last quarter"
+                    ],
+                    "recommendations": [
+                        "Tune alerting with use-case driven detections",
+                        "Implement retrospective approval workflow for emergency changes"
+                    ]
                 }
             ]
         },

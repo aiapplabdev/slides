@@ -7,6 +7,7 @@ import { BrandSlide } from './BrandSlide'
 import { SynopsisSlide } from './SynopsisSlide'
 import { DualFrameworkSlide } from './DualFrameworkSlide'
 import { SpaceFrameworkSlide } from './SpaceFrameworkSlide'
+import { SecurityPostureSlide } from './SecurityPostureSlide'
 import { ChatSidebar } from './ChatSidebar'
 import type { Slide } from '../types/slide.types'
 
@@ -99,6 +100,8 @@ export function SlideDeck({ slides }: SlideDeckProps) {
                   />
                 ) : slide.layout === 'space-framework' ? (
                   <SpaceFrameworkSlide slide={slide} />
+                ) : slide.layout === 'samm-security' ? (
+                  <SecurityPostureSlide slide={slide} />
                 ) : null}
               </div>
               <button

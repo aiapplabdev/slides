@@ -99,4 +99,29 @@ export type SpaceFrameworkSlide = {
   benchmark?: string
 }
 
-export type Slide = BrandSlide | SynopsisSlide | DualFrameworkSlide | SpaceFrameworkSlide
+export type SammAssessment = {
+  id: string
+  practice: string
+  maturity_score: number
+  insights: string[]
+  proof: string[]
+  recommendations: string[]
+}
+
+export type SecurityPostureSlide = {
+  id: 'samm-security'
+  layout: 'samm-security'
+  title: string
+  subtitle?: string
+  description?: string
+  assessments: SammAssessment[]
+  info: InfoBlock
+  benchmark?: string
+}
+
+export type Slide =
+  | BrandSlide
+  | SynopsisSlide
+  | DualFrameworkSlide
+  | SpaceFrameworkSlide
+  | SecurityPostureSlide
