@@ -1,0 +1,314 @@
+.synopsis-slide {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 1.6vw, 1.3rem);
+  height: 100%;
+}
+
+.synopsis-slide .slide-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.synopsis-slide .tab-bar {
+  align-self: center;
+}
+
+.synopsis-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.synopsis-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(0.9rem, 1.6vw, 1.3rem);
+  flex: 1;
+  min-height: 0;
+}
+
+.synopsis-hero-card {
+  background: var(--color-surface-strong);
+  border-radius: 20px;
+  border: 1px solid var(--color-border);
+  padding: clamp(1rem, 1.8vw, 1.4rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.65rem, 1.2vw, 0.95rem);
+  min-height: 0;
+}
+
+.synopsis-hero-card header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.synopsis-hero-card h3 {
+  margin: 0;
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+}
+
+.synopsis-kicker {
+  font-size: clamp(0.68rem, 1vw, 0.85rem);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.synopsis-lead {
+  margin: 0;
+  font-size: clamp(0.9rem, 1.35vw, 1.05rem);
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+.synopsis-paragraphs {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.55rem, 1vw, 0.8rem);
+}
+
+.synopsis-paragraphs p {
+  margin: 0;
+  font-size: clamp(0.8rem, 1.15vw, 0.95rem);
+  color: var(--color-muted-strong);
+}
+
+.synopsis-overview-side {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.8rem, 1.4vw, 1.1rem);
+  min-height: 0;
+}
+
+.synopsis-stat-cluster {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.6rem, 1vw, 0.85rem);
+}
+
+.synopsis-stat-card {
+  background: var(--color-surface);
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
+  padding: clamp(0.7rem, 1.2vw, 0.95rem);
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 0.9vw, 0.75rem);
+}
+
+.stat-value {
+  font-size: clamp(1.3rem, 2.1vw, 1.7rem);
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.stat-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.stat-label {
+  font-size: clamp(0.72rem, 1.05vw, 0.88rem);
+  font-weight: 600;
+}
+
+.stat-caption {
+  font-size: clamp(0.64rem, 0.95vw, 0.78rem);
+  color: var(--color-muted);
+}
+
+.synopsis-highlight-card {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(37, 99, 235, 0.04));
+  border-radius: 18px;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  padding: clamp(0.75rem, 1.3vw, 1.1rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.55rem, 1vw, 0.85rem);
+}
+
+.synopsis-highlight-card.secondary {
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.18), rgba(15, 118, 110, 0.05));
+  border-color: rgba(15, 118, 110, 0.28);
+}
+
+.synopsis-highlight-card header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.synopsis-highlight-card h4 {
+  margin: 0;
+  font-size: clamp(0.85rem, 1.25vw, 1.05rem);
+}
+
+.synopsis-highlight-card span {
+  font-size: clamp(0.68rem, 1vw, 0.82rem);
+  color: var(--color-muted);
+}
+
+.synopsis-highlight-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.45rem, 0.85vw, 0.7rem);
+}
+
+.synopsis-highlight-card li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: clamp(0.75rem, 1.15vw, 0.92rem);
+}
+
+.synopsis-highlight-card .dot,
+.synopsis-sources-card .dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  margin-top: 0.4rem;
+}
+
+.synopsis-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(0.8rem, 1.4vw, 1.1rem);
+  width: 100%;
+}
+
+.synopsis-card {
+  background: var(--color-surface-strong);
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  padding: clamp(0.85rem, 1.4vw, 1.2rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 1vw, 0.85rem);
+  min-height: 0;
+}
+
+.synopsis-card-index {
+  font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.synopsis-card p {
+  margin: 0;
+  font-size: clamp(0.8rem, 1.15vw, 0.96rem);
+  color: var(--color-text);
+  line-height: 1.45;
+}
+
+.synopsis-pillars-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(1rem, 1.8vw, 1.4rem);
+  flex: 1;
+  min-height: 0;
+}
+
+.synopsis-pillars-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 1.3vw, 1.05rem);
+}
+
+.pillar-card {
+  background: var(--color-surface);
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  padding: clamp(0.85rem, 1.4vw, 1.2rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.45rem, 0.9vw, 0.7rem);
+}
+
+.pillar-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.pillar-step {
+  font-size: clamp(0.68rem, 1vw, 0.82rem);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.pillar-card h4 {
+  margin: 0;
+  font-size: clamp(0.9rem, 1.35vw, 1.08rem);
+}
+
+.pillar-card p {
+  margin: 0;
+  font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+  color: var(--color-muted-strong);
+  line-height: 1.45;
+}
+
+.synopsis-sources-card {
+  background: var(--color-surface-strong);
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  padding: clamp(0.9rem, 1.5vw, 1.25rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 1.05vw, 0.85rem);
+}
+
+.synopsis-sources-card header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.synopsis-sources-card h4 {
+  margin: 0;
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+}
+
+.synopsis-sources-card span {
+  font-size: clamp(0.68rem, 1vw, 0.84rem);
+  color: var(--color-muted);
+}
+
+.synopsis-sources-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.45rem, 0.9vw, 0.7rem);
+}
+
+.synopsis-sources-card li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: clamp(0.74rem, 1.1vw, 0.9rem);
+}
+
+.synopsis-sources-card a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.synopsis-sources-card a:hover,
+.synopsis-highlight-card a:hover {
+  text-decoration: underline;
+}
